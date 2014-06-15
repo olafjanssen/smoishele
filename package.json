@@ -1,0 +1,26 @@
+{
+  "name": "smoishele",
+  "version": "0.0.0",
+  "description": "Smoishele - the face blending web server",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olafjanssen/smoishele.git"
+  },
+  "keywords": [
+    "faceblender"
+  ],
+  "author": "nullelement",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/olafjanssen/smoishele/issues"
+  },
+  "homepage": "https://github.com/olafjanssen/smoishele",
+  "dependencies": {
+    "express": "^4.4.3",
+    "logfmt": "^1.1.2"
+  }
+}
