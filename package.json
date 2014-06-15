@@ -21,6 +21,7 @@
   "homepage": "https://github.com/olafjanssen/smoishele",
   "dependencies": {
     "express": "^4.4.3",
-    "logfmt": "^1.1.2"
+    "logfmt": "^1.1.2",
+    "mongodb": "^1.4.6"
   }
 }
