@@ -26,7 +26,7 @@ passport.use('linkedin', new OAuth2Strategy({
   },
   function(accessToken, refreshToken, profile, done) {
     request({
-	  uri: "http://api.linkedin.com/v1/people/~/connections",
+	  uri: "https://api.linkedin.com/v1/people/~/connections",
 	  method: "GET",
 	  timeout: 10000,
 	  followRedirect: true,
