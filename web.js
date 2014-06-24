@@ -2,51 +2,51 @@ var express = require('express')
   , http = require('http')
   , passport = require('passport')
   , OAuth2Strategy = require('passport-oauth').OAuth2Strategy
-  , request = require("request");
+  , request = require("request")
+  , FacebookStrategy = require('passport-facebook').Strategy;
  
 var app = express();
 
 // configure Express
-app.set('port', process.env.PORT || 3000);
-
-var LINKEDIN_API_KEY = "77o5utzfrab1wz";
-var LINKEDIN_SECRET_KEY = "S1NTOHbq5juFqFFj";
-var LINKEDIN_CONSUMER_KEY = "f7037e9e-2db3-48be-87cf-0f175b5fc391";
-var LINKEDIN_CONSUMER_SECRET = "72ce6c51-4402-4232-b7ca-ae65c3bca933";
-var LINKEDIN_CALLBACK_URL = "https://sleepy-lowlands-2774.herokuapp.com/auth/linkedin/callback";
-//var LINKEDIN_CALLBACK_URL = "http://localhost:5000/auth/linkedin/callback";
+app.set('port', process.env.PORT || 5000);
 
 
-passport.use('linkedin', new OAuth2Strategy({
-    authorizationURL: 'https://www.linkedin.com/uas/oauth2/authorization?response_type=code&state=BFEDDCAF45453sdffef424',
-    tokenURL: 'https://www.linkedin.com/uas/oauth2/accessToken',
-    clientID: LINKEDIN_API_KEY,
-    clientSecret: LINKEDIN_SECRET_KEY,
-    callbackURL: LINKEDIN_CALLBACK_URL
+passport.use(new FacebookStrategy({
+    clientID: "715869205121101",
+    clientSecret: "cb638b8d257fe9c2ada4da99028a68bf",
+    callbackURL: "http://localhost:5000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
+
     request({
-	  uri: "https://api.linkedin.com/v1/people/~/connections",
-	  method: "GET",
-	  timeout: 10000,
-	  followRedirect: true,
-	  maxRedirects: 10,
-	  headers: { 'x-li-format': 'json' },
-	  qs: { oauth2_access_token: accessToken }
-	}, function(error, response, body) {
-	  console.log(body);
-      done(error, null);
-	});
+        uri: "https://graph.facebook.com/v2.0/me/photos?access_token=" + accessToken,
+        method: "GET",
+        timeout: 10000,
+        followRedirect: true,
+        maxRedirects: 10,
+        headers: { 'x-li-format': 'json' },
+      }, function(error, response, body) {
+          var photos = JSON.parse(body);
+
+          console.log(photos.data);
+          for(var p = 0;p < photos.data.length; p++){
+            console.log(photos.data[p].picture);
+          }
+
+          done(error, null);
+      });
+
   }
 ));
 
-app.get('/auth/linkedin',
-  passport.authenticate('linkedin'),
+
+app.get('/auth/facebook',
+  passport.authenticate('facebook'),
   function(req, res){
   });
 
-app.get('/auth/linkedin/callback',
-  passport.authenticate('linkedin', { failureRedirect: '/login' }),
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
     res.redirect('/');
   });
