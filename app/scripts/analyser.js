@@ -25,26 +25,11 @@ var smoisheleAnalyser = (function(clm, pModel, ccv, cascade){
 		// load the image given by the url in a canvas
 		var img = new Image();
 		img.onload = function() {
-			if (img.height > 500 || img.width > 700) {
-				var rel = img.height/img.width;
-				var neww = 700;
-				var newh = neww*rel;
-				if (newh > 500) {
-					newh = 500;
-					neww = newh/rel;
-				}
-				canvas.setAttribute('width', neww);
-				canvas.setAttribute('height', newh);
-				context.drawImage(img,0,0,neww, newh);
-				currentImage.width = neww;
-				currentImage.height = newh;
-			} else {
-				canvas.setAttribute('width', img.width);
-				canvas.setAttribute('height', img.height);
-				context.drawImage(img,0,0,img.width, img.height);
-				currentImage.width = img.width;
-				currentImage.height = img.height;
-			}
+			canvas.setAttribute('width', img.width);
+			canvas.setAttribute('height', img.height);
+			context.drawImage(img,0,0,img.width, img.height);
+			currentImage.width = img.width;
+			currentImage.height = img.height;
 
 			// detect faces in the image using ccv
 			/*jshint camelcase: false */
