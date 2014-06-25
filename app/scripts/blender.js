@@ -7,7 +7,9 @@ var smoisheleBlender = (function(){
 	'use strict';
 
 	var faces = [],
-		resultWidth = 320;
+		resultWidth = 320,
+		resultHeight = 480,
+		faceBlend = {};
 
 	var eye2eyeDistance = 0;
 	var eye2mouthDistance = 0;
@@ -34,12 +36,53 @@ var smoisheleBlender = (function(){
 		eyeAngle /= faces.length;
 
 		console.log(eye2eyeDistance + ' ' + eye2mouthDistance + ' ' + eyeAngle);
+
+		// resizing and position the averaged face on the result canvas
+		var normalizedEye2eyeDistance = 0.3 * resultWidth, normalizedEye2mouthDistance = eye2mouthDistance* normalizedEye2eyeDistance/eye2eyeDistance;
+		var dy = 0.4 * resultHeight;
+
+		if (2*normalizedEye2mouthDistance * Math.sin(eyeAngle) > dy) {
+			normalizedEye2mouthDistance = dy / (2 * Math.sin(eyeAngle));
+			normalizedEye2eyeDistance = eye2eyeDistance * normalizedEye2mouthDistance/eye2mouthDistance;
+		}
+
+		// create the average face metadata
+		faceBlend = {image: {width: resultWidth, height: resultHeight},
+					leftEye: {x: 0.5*(resultWidth - normalizedEye2eyeDistance)/resultWidth, y: 0.45},
+					rightEye: {x: 0.5*(resultWidth + normalizedEye2eyeDistance)/resultWidth, y: 0.45}};
+		faceBlend.mouth.x = (faceBlend.leftEye.x + normalizedEye2mouthDistance * Math.cos(eyeAngle))/resultWidth;
+		faceBlend.mouth.y = (faceBlend.leftEye.y + normalizedEye2mouthDistance * Math.sin(eyeAngle))/resultHeight;
+
 	}
 
+	function transformContext(context, source, target) {
+		var affinematrix = [];
+
+        var a = source.leftEye.x, b = source.leftEye.y, dx = -target.leftEye.x, dy = -target.leftEye.y;
+        var l = source.rightEye.x, m = source.rightEye.y, kx = -target.rightEye.x, ky = -target.rightEye.y;
+        var p = source.mouth.x, q = source.mouth.y, sx = -target.mouth.x, sy = -target.mouth.y;
+    
+        var D = (a*m+b*p+l*q) - (a*q+b*l+m*p);
+        affinematrix[0] = ((b*kx + m*sx + dx*q) - (b*sx +q*kx + dx*m))/D;
+        affinematrix[1] = ((b*ky + m*sy + dy*q) - (b*sy +q*ky + dy*m))/D;
+        affinematrix[2] = ((a*sx + p*kx + dx*l) - (a*kx +l*sx + dx*p))/D;
+        affinematrix[3] = ((a*sy + p*ky + dy*l) - (a*ky +l*sy + dy*p))/D;
+        affinematrix[4] = ((a*q*kx + b*l*sx + dx*m*p) - (a*m*sx +b*p*kx + dx*l*q))/D;
+        affinematrix[5] = ((a*q*ky + b*l*sy + dy*m*p) - (a*m*sy +b*p*ky + dy*l*q))/D;
+
+        context.transform(affinematrix[0],affinematrix[1],affinematrix[2],affinematrix[3],affinematrix[4],affinematrix[5]);
+	}
+
+	function performNextBlend(){
+		var face = faces.pop();
+		console.log(transformContext + ' ' + face);
+	}
 
 	function blend(faces_) {
 		faces = faces_;
 		init();
+
+		performNextBlend();
 	}
 
 	return { blend: blend };
