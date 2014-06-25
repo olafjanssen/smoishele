@@ -7,14 +7,20 @@ var smoisheleBlender = (function(){
 	'use strict';
 
 	var faces = [],
-		resultWidth = 320,
-		resultHeight = 480,
+		resultWidth = 320*4,
+		resultHeight = 480*4,
 		faceBlend = {},
 		count = 0;
 
 	var eye2eyeDistance = 0;
 	var eye2mouthDistance = 0;
 	var eyeAngle = 0;
+	var grandBuffer = [];
+
+	var canvas = document.getElementById('result');
+	canvas.setAttribute('width', resultWidth);
+	canvas.setAttribute('height', resultHeight);
+	var context = canvas.getContext('2d');
 
 	// computes the average proportions of the data to be blended
 	function init(){
@@ -90,33 +96,54 @@ var smoisheleBlender = (function(){
 
 	function performNextBlend(){
 		var face = faces.pop();
-		
-		var canvas = document.getElementById('result');
-		canvas.setAttribute('width', resultWidth);
-		canvas.setAttribute('height', resultHeight);
-
-		var context = canvas.getContext('2d');
-		
+				
 		var img = new Image();
 		img.onload = function() {
 			context.save();
+			context.clearRect(0, 0, canvas.width, canvas.height);
 			transformContext(context, face, faceBlend);
-			context.globalAlpha = 1.0/count;
-			context.drawImage(img,0,0);
+			context.drawImage(img, 0, 0);
 			context.restore();
+
+			// put the image into a buffer
+			var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
+			for (var d=0;d<grandBuffer.length;d++) {
+				grandBuffer[d] += imageData.data[d];
+			}
+	
+			if(faces.length>0) {
+				performNextBlend();
+			} else {
+				finishBlend();
+			}
 		};
 		
 		img.crossOrigin = 'Anonymous';
 		img.src = face.image.url;
 
-		if(faces.length>0) {
-			performNextBlend();
+	}
+
+	function finishBlend(){
+		console.log('finishing');
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
+		console.log('image data ' + imageData.data.length + ' ' + grandBuffer.length);
+
+		for (var d=0;d<grandBuffer.length;d++) {
+			imageData.data[d] = grandBuffer[d]/count;
 		}
+		context.putImageData(imageData, 0, 0);
 	}
 
 	function blend(faces_) {
 		faces = faces_;
 		count = faces.length;
+		
+		grandBuffer = new Uint32Array(4 * resultWidth * resultHeight);
+		for (var d=0;d<grandBuffer.length;d++) {
+			grandBuffer[d] = d%4===3?255:0;
+		}
+		
 		init();
 
 		performNextBlend();
