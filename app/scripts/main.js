@@ -8,6 +8,8 @@ for(var i=1; i<24; i++) {
 
 smoisheleAnalyser.getFaceFeatures(images, function(detectedFaces){
 	'use strict';
-	console.log(detectedFaces);
-	smoisheleBlender.blend(detectedFaces);
+	smoisheleBlender.blend(detectedFaces, function(image) {
+		window.open(image, '', '_blank');
+	});
+	
 });

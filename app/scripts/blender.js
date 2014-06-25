@@ -7,10 +7,11 @@ var smoisheleBlender = (function(){
 	'use strict';
 
 	var faces = [],
-		resultWidth = 320*4,
-		resultHeight = 480*4,
+		resultWidth = 320,
+		resultHeight = 480,
 		faceBlend = {},
-		count = 0;
+		count = 0,
+		doneCallback;
 
 	var eye2eyeDistance = 0;
 	var eye2mouthDistance = 0;
@@ -60,9 +61,6 @@ var smoisheleBlender = (function(){
 		
 		faceBlend.mouth = {x: faceBlend.leftEye.x + (normalizedEye2mouthDistance * Math.cos(eyeAngle))/resultWidth,
 							y: faceBlend.leftEye.y + (normalizedEye2mouthDistance * Math.sin(eyeAngle))/resultHeight};
-
-		console.log(faceBlend);
-
 	}
 
 	function transformContext(context, source, target) {
@@ -88,8 +86,6 @@ var smoisheleBlender = (function(){
         affinematrix[3] = ((a*sy + p*ky + dy*l) - (a*ky +l*sy + dy*p))/D;
         affinematrix[4] = ((a*q*kx + b*l*sx + dx*m*p) - (a*m*sx +b*p*kx + dx*l*q))/D;
         affinematrix[5] = ((a*q*ky + b*l*sy + dy*m*p) - (a*m*sy +b*p*ky + dy*l*q))/D;
-
-        console.log(affinematrix);
 
         context.transform(affinematrix[0],affinematrix[1],affinematrix[2],affinematrix[3],affinematrix[4],affinematrix[5]);
 	}
@@ -133,11 +129,15 @@ var smoisheleBlender = (function(){
 			imageData.data[d] = grandBuffer[d]/count;
 		}
 		context.putImageData(imageData, 0, 0);
+
+	    var exportedImage = canvas.toDataURL('image/png;base64;');
+		doneCallback(exportedImage);
 	}
 
-	function blend(faces_) {
+	function blend(faces_, callback) {
 		faces = faces_;
 		count = faces.length;
+		doneCallback = callback;
 		
 		grandBuffer = new Uint32Array(4 * resultWidth * resultHeight);
 		for (var d=0;d<grandBuffer.length;d++) {
