@@ -4,13 +4,21 @@
  *	This object starts a blend based on file input.
  *	
  */
-(function fileInput(smoisheleAnalyser, smoisheleBlender){
+(function fileInput(smoisheleAnalyser, smoisheleBlender, $){
 	'use strict';
 
 	function startBlend(images) {
-		smoisheleAnalyser.getFaceFeatures(images, function(detectedFaces){
+		smoisheleAnalyser.getFaceFeatures(images, function(face){
+			var $img = $('<div class="input-thumb"></div>');
+			$img.css('background-image', 'url(' + face.image.url + ')');
+			$('#analysed-folder').append($img);
+
+			var scrollContainer = document.getElementById('analysed-folder');
+			scrollContainer.scrollTop = scrollContainer.scrollHeight;
+		}, function(detectedFaces){
 			smoisheleBlender.blend(detectedFaces, function(image) {
-				window.open(image, '', '_blank');
+				image = null;
+				//window.open(image, '', '_blank');
 			});
 		});
 	}
@@ -44,4 +52,4 @@
 	}
 
 	document.getElementById('file-upload-button').addEventListener('change', handleFileSelect, false);
-})(smoisheleAnalyser, smoisheleBlender);
+})(smoisheleAnalyser, smoisheleBlender, $);

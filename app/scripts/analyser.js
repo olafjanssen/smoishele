@@ -16,7 +16,8 @@ var smoisheleAnalyser = (function(clm, pModel, ccv, cascade){
 		currentImage = {},
 		blockResult = false,
 		detectedFaces = [],
-		feauturesCallback;
+		progressCallback,
+		doneCallback;
 
 		
 	cTrack.init(pModel);
@@ -68,7 +69,8 @@ var smoisheleAnalyser = (function(clm, pModel, ccv, cascade){
 			if (urls.length > 0){
 				processImage(urls.shift());
 			} else {
-				feauturesCallback(detectedFaces);
+				document.documentElement.classList.remove('analysing');
+				doneCallback(detectedFaces);
 			}
 		}
 	}
@@ -98,7 +100,7 @@ var smoisheleAnalyser = (function(clm, pModel, ccv, cascade){
 										rightEye: {x: positions[32][0]/currentImage.width, y: positions[32][1]/currentImage.height},
 										mouth: {x: positions[60][0]/currentImage.width, y: positions[60][1]/currentImage.height}};
 		detectedFaces.push(face);
-
+		progressCallback(face);
 		detectFeatures();
 	}, false);
 
@@ -107,9 +109,13 @@ var smoisheleAnalyser = (function(clm, pModel, ccv, cascade){
 	 * Call this function to analyse faces in the given array of urls. The callback is called in the end and contains
 	 * the array of analysed faces.
 	 */
-	function getFaceFeatures(urls_, callback) {
+	function getFaceFeatures(urls_, progressCallback_, doneCallback_) {
+		document.documentElement.classList.add('analysing');
+
+		progressCallback = progressCallback_;
+		doneCallback = doneCallback_;
 		urls = urls_;
-		feauturesCallback = callback;
+
 		detectedFaces = [];
 		processImage(urls.shift());
 	}
