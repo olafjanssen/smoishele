@@ -19,7 +19,11 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 }
 
 .analysing #input-box {
-    -webkit-transform: translate(-17em, 0);
+    -webkit-transform: translate(-8.5em, 0);
+}
+
+.analysing #main-box {
+    -webkit-transform: translate(8.5em, 0);
 }
 
 #analysed-folder {

@@ -8,6 +8,8 @@
 	'use strict';
 
 	function startBlend(images) {
+		$('#analysed-folder').empty();
+
 		smoisheleAnalyser.getFaceFeatures(images, function(face){
 			var $img = $('<div class="input-thumb"></div>');
 			$img.css('background-image', 'url(' + face.image.url + ')');
