@@ -19,8 +19,7 @@
 			scrollContainer.scrollTop = scrollContainer.scrollHeight;
 		}, function(detectedFaces){
 			smoisheleBlender.blend(detectedFaces, function(image) {
-				image = null;
-				//window.open(image, '', '_blank');
+				window.open(image, '', '_blank');
 			});
 		});
 	}

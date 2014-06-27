@@ -7,8 +7,8 @@ var smoisheleBlender = (function(){
 	'use strict';
 
 	var faces = [],
-		resultWidth = 320 * 4,
-		resultHeight = 480 * 4,
+		resultWidth = 320 * 2,
+		resultHeight = 480 * 2,
 		faceBlend = {},
 		count = 0,
 		doneCallback;
