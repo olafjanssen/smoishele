@@ -42,7 +42,7 @@
 			var reader = new FileReader();
 			reader.onload = (function() {
 				return function(e) {
-					imagesUrls.push(e.target.result);
+					imagesUrls.push({url: e.target.result});
 					if (imagesUrls.length === files.length) {
 						startBlend(imagesUrls);
 					}

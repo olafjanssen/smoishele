@@ -9,7 +9,6 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
-
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
@@ -43,17 +42,19 @@
             </div>
 
             <input type="file" id="file-upload-button" name="files[]" multiple="multiple"/>
+            <button id="facebook-connect-button">connect with facebook</button>
+
         </div>
 
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
-        <script src="../bower_components/clmtrackr/models/model_pca_20_svm.js"></script>
         <script src="../bower_components/clmtrackr/clmtrackr.js"></script>
+        <!-- endbower -->
+        <script src="../bower_components/clmtrackr/models/model_pca_20_svm.js"></script>
         <script src="../bower_components/ccv/js/ccv.js"></script>
         <script src="../bower_components/ccv/js/face.js"></script>
-        <!-- endbower -->
         <!-- endbuild -->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
@@ -85,6 +86,7 @@
         <script src="scripts/analyser.js"></script>
         <script src="scripts/blender.js"></script>
         <script src="scripts/file-input.js"></script>
+        <script src="scripts/facebook-input.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 </body>

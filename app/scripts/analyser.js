@@ -51,8 +51,8 @@ var smoisheleAnalyser = (function(clm, pModel, ccv, cascade){
 			}
 		};
 		img.crossOrigin = 'Anonymous';
-		img.src = url;
-		currentImage = {url: url};
+		img.src = url.url;
+		currentImage = url;
 	}
 
 	// tries to detect features of a single face in a portion of the image
@@ -62,9 +62,22 @@ var smoisheleAnalyser = (function(clm, pModel, ccv, cascade){
 			var box = [face.x, face.y, face.width, face.height];
 			facesInPhoto.splice(0,1);
 
-			cTrack.reset();
-			cTrack.start(canvas, box);
-			blockResult = false;
+            // check if face is in the focus area
+            console.log('check focus');
+            console.log(currentImage);
+            console.log(face);
+            if (currentImage.focus === undefined || (
+                currentImage.focus.x > face.x &&
+                currentImage.focus.x < face.x + face.width &&
+                currentImage.focus.y > face.y &&
+                currentImage.focus.y < face.y + face.height)) {
+                console.log('analysing');
+                cTrack.reset();
+                cTrack.start(canvas, box);
+                blockResult = false;
+            } else {
+                detectFeatures();
+            }
 		} else {
 			if (urls.length > 0){
 				processImage(urls.shift());
