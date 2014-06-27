@@ -13,21 +13,18 @@ var smoisheleBlender = (function(){
 		count = 0,
 		doneCallback;
 
-	var eye2eyeDistance = 0;
-	var eye2mouthDistance = 0;
-	var eyeAngle = 0;
 	var grandBuffer = [];
 
-	var canvas = document.getElementById('result');
+	var canvas = document.getElementById('result'),
+		context = canvas.getContext('2d');
 	canvas.setAttribute('width', resultWidth);
 	canvas.setAttribute('height', resultHeight);
-	var context = canvas.getContext('2d');
 
 	// computes the average proportions of the data to be blended
 	function init(){
-		eye2eyeDistance = 0;
-		eye2mouthDistance = 0;
-		eyeAngle = 0;
+		var eye2eyeDistance = 0,
+			eye2mouthDistance = 0,
+			eyeAngle = 0;
 
 		faces.forEach(function(face){
 			var scaledImageHeight = face.image.height/face.image.width * resultWidth;
@@ -42,8 +39,6 @@ var smoisheleBlender = (function(){
 		eye2eyeDistance /= faces.length;
 		eye2mouthDistance /= faces.length;
 		eyeAngle /= faces.length;
-
-		console.log(eye2eyeDistance + ' ' + eye2mouthDistance + ' ' + eyeAngle);
 
 		// resizing and position the averaged face on the result canvas
 		var normalizedEye2eyeDistance = 0.3 * resultWidth, normalizedEye2mouthDistance = eye2mouthDistance* normalizedEye2eyeDistance/eye2eyeDistance;
@@ -120,10 +115,8 @@ var smoisheleBlender = (function(){
 	}
 
 	function finishBlend(){
-		console.log('finishing');
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
-		console.log('image data ' + imageData.data.length + ' ' + grandBuffer.length);
 
 		for (var d=0;d<grandBuffer.length;d++) {
 			imageData.data[d] = grandBuffer[d]/count;
@@ -149,8 +142,8 @@ var smoisheleBlender = (function(){
 		performNextBlend();
 	}
 
-	return { blend: blend };
+	return { blend: blend, init: function(){} };
 })();
 
-console.log(smoisheleBlender);
+smoisheleBlender.init();
 
