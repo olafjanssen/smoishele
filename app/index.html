@@ -24,8 +24,6 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <div class="globe"></div>
-
         <div class="container">
             <div class="header">
                 <h3 class="text-muted">smoishele</h3>
@@ -39,14 +37,22 @@
             <div class="box-container">
                 <div id="main-box" class="blend-box">
                     <div id="analysis-result"/>
-                    <canvas id="result"></canvas>
                 </div>
             </div>
-
-            <input type="file" id="file-upload-button" name="files[]" multiple="multiple"/>
-            <button id="facebook-connect-button">connect with facebook</button>
-
         </div>
+
+        <menu>
+            <div class='input-option upload'>
+                <div class='upload-button'></div>
+                <input type="file" id="file-upload-button" name="files[]" multiple="multiple"/>
+            </div>    
+            <div class='input-option facebook'>
+                <button id="facebook-connect-button"></button>
+            </div>
+            <div class='input-option smoishele-logo'>
+                <div id="result"></canvas>
+            </div>
+        </menu>
 
 
         <!-- build:js scripts/vendor.js -->
@@ -86,10 +92,10 @@
         <!-- endbuild -->
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="scripts/data-view.js"></script>
         <script src="scripts/analyser.js"></script>
         <script src="scripts/blender.js"></script>
         <script src="scripts/detect.js"></script>
-        <script src="scripts/data-view.js"></script>
         <script src="scripts/file-input.js"></script>
         <script src="scripts/facebook-input.js"></script>
         <script src="scripts/main.js"></script>

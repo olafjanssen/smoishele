@@ -1,21 +1,23 @@
+/* global smoisheleDataView */
+
 /** 
  *	This object can analyse an array of images given by an array of urls.
  *	It will first detect faces using ccv, then proceeds to fit facial features using clmtrackr.
  *	
  */
-var smoisheleBlender = (function(){
+var smoisheleBlender = (function(smoisheleDataView){
 	'use strict';
 
 	var faces = [],
-		resultWidth = 320 * 2,
-		resultHeight = 480 * 2,
+		resultWidth = 320,
+		resultHeight = 480,
 		faceBlend = {},
 		count = 0,
 		doneCallback;
 
 	var grandBuffer = [];
 
-	var canvas = document.getElementById('result'),
+	var canvas = document.createElement('canvas'),
 		context = canvas.getContext('2d');
 	canvas.setAttribute('width', resultWidth);
 	canvas.setAttribute('height', resultHeight);
@@ -101,7 +103,18 @@ var smoisheleBlender = (function(){
 			for (var d=0;d<grandBuffer.length;d++) {
 				grandBuffer[d] += imageData.data[d];
 			}
-	
+			
+			// update the intermediate result
+			count += 1;
+			context.clearRect(0, 0, canvas.width, canvas.height);
+
+			for (d=0;d<grandBuffer.length;d++) {
+				imageData.data[d] = grandBuffer[d]/count;
+			}
+			context.putImageData(imageData, 0, 0);
+			$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
+
+
 			if(faces.length>0) {
 				performNextBlend();
 			} else {
@@ -115,21 +128,15 @@ var smoisheleBlender = (function(){
 	}
 
 	function finishBlend(){
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
-
-		for (var d=0;d<grandBuffer.length;d++) {
-			imageData.data[d] = grandBuffer[d]/count;
-		}
-		context.putImageData(imageData, 0, 0);
-
 	    var exportedImage = canvas.toDataURL('image/png;base64;');
+		$('body').removeClass('blending');
+		$('body').addClass('finished-blending');
 		doneCallback(exportedImage);
 	}
 
 	function blend(faces_, callback) {
 		faces = faces_;
-		count = faces.length;
+		count = 0;
 		doneCallback = callback;
 		
 		grandBuffer = new Uint32Array(4 * resultWidth * resultHeight);
@@ -141,12 +148,21 @@ var smoisheleBlender = (function(){
 
 		setTimeout(function(){
 			$('body').addClass('blending');
-			setTimeout(performNextBlend, 1000);
+			$('body').removeClass('analysing');
+
+			setTimeout(function(){
+				smoisheleDataView.reset();
+				performNextBlend();
+			}, 1000);
 		}, 2000);
 	}
 
+	document.getElementById('result').addEventListener('click', function(){
+		$('body').toggleClass('finished-blending');
+	}, false);
+
 	return { blend: blend, init: function(){} };
-})();
+})(smoisheleDataView);
 
 smoisheleBlender.init();
 

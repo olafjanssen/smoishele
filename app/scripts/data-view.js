@@ -8,6 +8,7 @@ var smoisheleDataView = (function($) {
 	var faces = [];
 
 	function addFace(face) {
+		$('body').addClass('analysing');
 		faces.push(face);
 
 		var $img = $('<div class="input-thumb"></div>');
@@ -29,6 +30,7 @@ var smoisheleDataView = (function($) {
 
 	function reset() {
 		faces = [];
+		$('.input-thumb').remove();
 	}
 
 	return {addFace: addFace, getFaces: getFaces, reset: reset};
