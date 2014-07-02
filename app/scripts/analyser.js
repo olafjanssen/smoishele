@@ -20,6 +20,9 @@ var smoisheleAnalyser = (function(clm, pModel){
 	//cTrack.setResponseMode('blend', ['raw', 'sobel', 'lbp']);
 
 	function processQueue() {
+		console.log('queue:');
+		console.log(queue);
+
 		if (queue.length === 0){
 			return;
 		}
@@ -101,6 +104,8 @@ var smoisheleAnalyser = (function(clm, pModel){
 	 * the array of analysed faces.
 	 */
 	function getFaceFeatures(face, callback) {
+		console.log('pushing:');
+		console.log(face);
 		queue.push({face: face, callback: callback});
 		if (!inProgress){
 			processQueue();

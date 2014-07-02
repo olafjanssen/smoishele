@@ -9,7 +9,7 @@ var smoisheleDetect = (function(ccv, cascade){
 	var maxWidth = 1024,
 		calls = 0;
 
-	function processImage(url, callback) {
+	function processImage(url, callback, assumedLocation) {
 
 		var canvas = document.createElement('canvas'),
 			context = canvas.getContext('2d');
@@ -28,17 +28,20 @@ var smoisheleDetect = (function(ccv, cascade){
 
 			// detect faces in the image using ccv
 			/*jshint camelcase: false */
-			// var facesInPhoto = ccv.detect_objects({ 'canvas': canvas, //ccv.grayscale(canvas),
-			// 						'cascade': cascade,
-			// 						'interval': 5,
-			// 						'min_neighbors': 2 });
 
 			function post(facesInPhoto){
-				if (facesInPhoto.length === 0){
-					callback(null);
-				}
-
+				
+				var callbackCalled = false;
 				facesInPhoto.forEach(function(faceInPhoto) {
+					
+					if (assumedLocation){
+						if (faceInPhoto.x > assumedLocation.x * W || faceInPhoto.y > assumedLocation.y * H ||
+							faceInPhoto.x + faceInPhoto.width < assumedLocation.x * W ||
+							faceInPhoto.y + faceInPhoto.height < assumedLocation.y * H) {
+							return;
+						}
+					}
+
 					var faceCanvas = document.createElement('canvas'),
 						faceContext = faceCanvas.getContext('2d');
 					
@@ -60,16 +63,21 @@ var smoisheleDetect = (function(ccv, cascade){
 					faceContext.putImageData(faceData,0,0);
 					var face = { image: {url: faceCanvas.toDataURL('image/png'), width: faceInPhoto.width, height: faceInPhoto.height} };
 					callback(face);
+					callbackCalled = true;
 				});
-
+				
+				// if no faces sent to callback, send a null
+				if (!callbackCalled){
+					callback(null);
+				}
 			}
-			ccv.detect_objects({ 'canvas' : canvas,
-							 'cascade' : cascade,
-							 'interval' : 5,
-							 'min_neighbors' : 3,
-							 'async' : true,
-							 'worker' : 1 })(post);
 
+			ccv.detect_objects({ 'canvas' : canvas,
+						 'cascade' : cascade,
+						 'interval' : 5,
+						 'min_neighbors' : 3,
+						 'async' : true,
+						 'worker' : 1 })(post);
 			/*jshint camelcase: true */
 
 		};
