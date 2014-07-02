@@ -12,6 +12,14 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
     top: 0;
 }
 
+#analysis-result {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-size: cover;  
+    background-position: center center;  
+}
+
 #input-box {
     -webkit-transition: -webkit-transform 0.5s ease-out;
     border: 0.75em solid #222;
@@ -33,6 +41,7 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 }
 
 .input-thumb {
+    background-position: center center;
     background-size: cover;
     display: inline-block;
     height: 20%;

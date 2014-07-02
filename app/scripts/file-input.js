@@ -1,28 +1,28 @@
-/* global smoisheleAnalyser, smoisheleBlender */
+/* global smoisheleDetect, smoisheleAnalyser, smoisheleBlender */
 
 /** 
  *	This object starts a blend based on file input.
  *	
  */
-(function fileInput(smoisheleAnalyser, smoisheleBlender, $){
+(function fileInput(smoisheleDetect, smoisheleAnalyser, smoisheleBlender){
 	'use strict';
 
-	function startBlend(images) {
-		$('#analysed-folder').empty();
+	// function startBlend() {
+	// 	$('#analysed-folder').empty();
 
-		smoisheleAnalyser.getFaceFeatures(images, function(face){
-			var $img = $('<div class="input-thumb"></div>');
-			$img.css('background-image', 'url(' + face.image.url + ')');
-			$('#analysed-folder').append($img);
+	// 	// smoisheleAnalyser.getFaceFeatures(images, function(face){
+	// 	// 	var $img = $('<div class="input-thumb"></div>');
+	// 	// 	$img.css('background-image', 'url(' + face.image.url + ')');
+	// 	// 	$('#analysed-folder').append($img);
 
-			var scrollContainer = document.getElementById('analysed-folder');
-			scrollContainer.scrollTop = scrollContainer.scrollHeight;
-		}, function(detectedFaces){
-			smoisheleBlender.blend(detectedFaces, function(image) {
-				window.open(image, '', '_blank');
-			});
-		});
-	}
+	// 	// 	var scrollContainer = document.getElementById('analysed-folder');
+	// 	// 	scrollContainer.scrollTop = scrollContainer.scrollHeight;
+	// 	// }, function(detectedFaces){
+	// 	// 	smoisheleBlender.blend(detectedFaces, function(image) {
+	// 	// 		window.open(image, '', '_blank');
+	// 	// 	});
+	// 	// });
+	// }
 
 	function handleFileSelect(evt) {
 		// filter the input for image files
@@ -36,21 +36,68 @@
 		}
 
 		// load all files into file urls
-		var imagesUrls = [];
-		fileList.forEach(function(file) {
-			var reader = new FileReader();
-			reader.onload = (function() {
-				return function(e) {
-					imagesUrls.push({url: e.target.result});
-					if (imagesUrls.length === files.length) {
-						startBlend(imagesUrls);
-					}
-				};
-			})(file);
-			reader.readAsDataURL(file);
-		});
+		document.documentElement.classList.add('analysing');
 
+		var faces = [];
+
+		var start = 0,
+			step  = 1;
+		
+		function processBatch(){
+			var batch = fileList.slice(start, start + step);
+
+			console.log('batch:');
+			console.log(batch);
+
+			start += step;
+
+			if (batch.length === 0) {
+				smoisheleBlender.blend(faces);
+			}
+
+			var expectedFaces = 0, analysedFaces = 0;
+
+			batch.forEach(function(file) {
+				var reader = new FileReader();
+				reader.onload = (function() {
+					return function(e) {
+						smoisheleDetect.getFaceFeatures(e.target.result,
+							function(face) {
+								if (!face) {
+									processBatch();
+								}
+
+								var $img = $('<div class="input-thumb"></div>');
+								$img.css('background-image', 'url(' + face.image.url + ')');
+								$('#analysed-folder').append($img);
+								var scrollContainer = document.getElementById('analysed-folder');
+								scrollContainer.scrollTop = scrollContainer.scrollHeight;
+
+								expectedFaces += 1;
+								console.log(face);
+
+								smoisheleAnalyser.getFaceFeatures(face, function(newFace){
+									analysedFaces += 1;
+									if (newFace){
+										faces.push(newFace);
+									}
+									console.log(newFace);
+
+									if (analysedFaces === expectedFaces){
+										processBatch();
+									}
+								});
+
+							});
+					};
+				})(file);
+				reader.readAsDataURL(file);
+			});
+		}
+
+		// process first batch
+		processBatch();
 	}
 
 	document.getElementById('file-upload-button').addEventListener('change', handleFileSelect, false);
-})(smoisheleAnalyser, smoisheleBlender, $);
+})(smoisheleDetect, smoisheleAnalyser, smoisheleBlender);

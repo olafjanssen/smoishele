@@ -1,25 +1,25 @@
-/* global FB, smoisheleAnalyser, smoisheleBlender */
+/* global FB, smoisheleAnalyser, smoisheleBlender, smoisheleDetect */
 
-(function facebookInput(smoisheleAnalyser, smoisheleBlender, $) {
+(function facebookInput(smoisheleAnalyser, smoisheleBlender, smoisheleDetect, $) {
     'use strict';
 
-    function startBlend(images) {
-        $('#analysed-folder').empty();
+    // function startBlend(images) {
+    //     $('#analysed-folder').empty();
 
-        smoisheleAnalyser.getFaceFeatures(images, function (face) {
-            var $img = $('<div class="input-thumb"></div>');
-            $img.css('background-image', 'url(' + face.image.url + ')');
-            $('#analysed-folder').append($img);
+    //     smoisheleAnalyser.getFaceFeatures(images, function (face) {
+    //         var $img = $('<div class="input-thumb"></div>');
+    //         $img.css('background-image', 'url(' + face.image.url + ')');
+    //         $('#analysed-folder').append($img);
 
-            var scrollContainer = document.getElementById('analysed-folder');
-            scrollContainer.scrollTop = scrollContainer.scrollHeight;
-        }, function (detectedFaces) {
-            smoisheleBlender.blend(detectedFaces, function (image) {
-                image = null;
-                //window.open(image, '', '_blank');
-            });
-        });
-    }
+    //         var scrollContainer = document.getElementById('analysed-folder');
+    //         scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    //     }, function (detectedFaces) {
+    //         smoisheleBlender.blend(detectedFaces, function (image) {
+    //             image = null;
+    //             //window.open(image, '', '_blank');
+    //         });
+    //     });
+    // }
 
     // This is called with the results from from FB.getLoginStatus().
     function statusChangeCallback(response) {
@@ -83,38 +83,66 @@
             // handle the response
             console.log(response);
 
-            var userId = response.authResponse.userID;
+            //var userId = response.authResponse.userID;
 
             FB.api(
                 '/me/photos',
-                {fields: 'source', limit: 100},
+                {fields: 'images', limit: 200},
                 function (photosResponse) {
                     console.log(photosResponse);
-                    var urls = [];
+                    
+                    var expectedFaces = 0, analysedFaces = 0, faces = [];
+
+                    document.documentElement.classList.add('analysing');
+
                     photosResponse.data.forEach(function (photo) {
-                        FB.api('/' + photo.id + '/tags',
-                            {fields: 'id,x,y'},
-                            function (tagsResponse) {
-                                console.log(tagsResponse);
-                                tagsResponse.data.forEach(function (tag) {
-                                    if (tag.id === userId) {
-                                        urls.push({url: photo.source, focus: {x: tag.x, y: tag.y}});
-                                    }
-                                });
-                                if (urls.length === 100){
-                                    console.log('starting blend');
-                                    startBlend(urls);
+                    //     FB.api('/' + photo.id + '/tags',
+                    //         {fields: 'id,x,y'},
+                    //         function (tagsResponse) {
+                    //             console.log(tagsResponse);
+                    //             tagsResponse.data.forEach(function (tag) {
+                    //                 if (tag.id === userId) {
+                    //                     urls.push({url: photo.images[photo.images.length-2].source}); //, focus: {x: tag.x, y: tag.y}});
+                    //                 }
+                    //             });
+
+                    //             if (urls.length === 200){
+                    //                 console.log('starting blend');
+                    //                 startBlend(urls);
+                    //             }
+                    //         }
+                    //     );
+
+                        smoisheleDetect.getFaceFeatures(photo.images[0].source,
+                        function(face) {
+                            var $img = $('<div class="input-thumb"></div>');
+                            $img.css('background-image', 'url(' + face.image.url + ')');
+                            $('#analysed-folder').append($img);
+                            
+                            expectedFaces += 1;
+                            console.log(face);
+
+                            smoisheleAnalyser.getFaceFeatures(face, function(newFace){
+                                analysedFaces += 1;
+                                if (newFace){
+                                    faces.push(newFace);
                                 }
-                            }
-                        );
+                                console.log(newFace);
+
+                                if (analysedFaces === expectedFaces){
+                                    smoisheleBlender.blend(faces);
+                                }
+                            });
+
+                        });
 
                     });
                 }
             );
 
-        }, {scope: 'public_profile,email,user_photos'});
+        }, {scope: 'public_profile,email,user_photos,user_friends'});
     }
 
     document.getElementById('facebook-connect-button').addEventListener('click', handleConnect, false);
 
-})(smoisheleAnalyser, smoisheleBlender, $);
+})(smoisheleAnalyser, smoisheleBlender, smoisheleDetect, $);

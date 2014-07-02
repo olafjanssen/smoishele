@@ -37,6 +37,7 @@
                     </div>
                 </div>
                 <div id="main-box" class="blend-box">
+                    <div id="analysis-result"/>
                     <canvas id="result"></canvas>
                 </div>
             </div>
@@ -51,6 +52,7 @@
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
         <script src="../bower_components/clmtrackr/clmtrackr.js"></script>
+        <script src="../bower_components/paralleljs/lib/parallel.js"></script>
         <!-- endbower -->
         <script src="../bower_components/clmtrackr/models/model_pca_20_svm.js"></script>
         <script src="../bower_components/ccv/js/ccv.js"></script>
@@ -85,6 +87,7 @@
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/analyser.js"></script>
         <script src="scripts/blender.js"></script>
+        <script src="scripts/detect.js"></script>
         <script src="scripts/file-input.js"></script>
         <script src="scripts/facebook-input.js"></script>
         <script src="scripts/main.js"></script>
