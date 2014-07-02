@@ -13,6 +13,12 @@ var smoisheleDataView = (function($) {
 		var $img = $('<div class="input-thumb"></div>');
 		$img.css('background-image', 'url(' + face.image.url + ')');
 		$('#analysed-folder').append($img);
+
+		setTimeout(function(){
+			$img.css('left', (Math.random()*100) +'%');
+			$img.css('top', (Math.random()*100) + '%');
+		}, 0);
+	
 		var scrollContainer = document.getElementById('analysed-folder');
 		scrollContainer.scrollTop = scrollContainer.scrollHeight;
 	}

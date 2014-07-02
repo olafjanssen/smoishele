@@ -139,7 +139,10 @@ var smoisheleBlender = (function(){
 		
 		init();
 
-		performNextBlend();
+		setTimeout(function(){
+			$('body').addClass('blending');
+			setTimeout(performNextBlend, 1000);
+		}, 2000);
 	}
 
 	return { blend: blend, init: function(){} };
