@@ -20,17 +20,11 @@ var smoisheleAnalyser = (function(clm, pModel){
 	//cTrack.setResponseMode('blend', ['raw', 'sobel', 'lbp']);
 
 	function processQueue() {
-		console.log('queue:');
-		console.log(queue);
-
 		if (queue.length === 0){
 			return;
 		}
 		inProgress = true;
 		currentItem = queue.shift();
-
-		console.log('proc: ');
-		console.log(currentItem);
 
 		// load the image given by the url in a canvas
 		var img = new Image();
@@ -49,7 +43,6 @@ var smoisheleAnalyser = (function(clm, pModel){
 	// EVENTS FOR CLMTRACKR
 	// detect if tracker fails to find a face
 	document.addEventListener('clmtrackrNotFound', function() {
-		console.log('not found');
 		cTrack.stop();
 		inProgress = false;
 		currentItem.callback(null);
@@ -60,7 +53,6 @@ var smoisheleAnalyser = (function(clm, pModel){
 	
 	// detect if tracker loses tracking of face
 	document.addEventListener('clmtrackrLost', function() {
-		console.log('face lost');
 		cTrack.stop();
 		inProgress = false;
 		currentItem.callback(null);
@@ -71,7 +63,6 @@ var smoisheleAnalyser = (function(clm, pModel){
 	
 	// detect if tracker has converged
 	document.addEventListener('clmtrackrConverged', function() {
-		console.log('converged');
 		if (blockResult) {
 			return;
 		}
@@ -91,8 +82,6 @@ var smoisheleAnalyser = (function(clm, pModel){
 		cTrack.draw(canvas);
 		$('#analysis-result').css('background-image', 'url(' + canvas.toDataURL() + ')');
 
-		console.log('score: ' + cTrack.getScore() );
-
 		if (queue.length > 0){
 			processQueue();
 		}
@@ -104,8 +93,6 @@ var smoisheleAnalyser = (function(clm, pModel){
 	 * the array of analysed faces.
 	 */
 	function getFaceFeatures(face, callback) {
-		console.log('pushing:');
-		console.log(face);
 		queue.push({face: face, callback: callback});
 		if (!inProgress){
 			processQueue();
