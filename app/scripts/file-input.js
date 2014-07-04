@@ -8,6 +8,8 @@
 	'use strict';
 
 	function handleFileSelect(evt) {
+		$('body').addClass('analysing');
+
 		// filter the input for image files
 		var files = evt.target.files;
 		var fileList = [];
@@ -47,7 +49,6 @@
 				reader.onload = (function() {
 					return function(e) {
 						count += 1;
-						//$('#progress-text').html(count + ' / ' + expectedCount);
 						var length = document.querySelector('.progress-circle path').getTotalLength();
 						$('.progress-circle path').css('stroke-dasharray',length + ' ' + length)
 						.css('stroke-dashoffset', length * (1-count/expectedCount));

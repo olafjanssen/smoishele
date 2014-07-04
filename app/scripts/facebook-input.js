@@ -56,6 +56,7 @@
     function handleConnect() {
         FB.login(function (response) {
             // handle the response
+            $('body').addClass('analysing');
 
             var userId = response.authResponse.userID;
 
@@ -79,7 +80,9 @@
 
                     batch.forEach(function(photo) {
                         count += 1;
-                        $('#progress-text').html(count + ' / ' + expectedCount);
+                        var length = document.querySelector('.progress-circle path').getTotalLength();
+                        $('.progress-circle path').css('stroke-dasharray',length + ' ' + length)
+                            .css('stroke-dashoffset', length * (1-count/expectedCount));
 
                         FB.api('/' + photo.id + '/tags', {fields: 'id,x,y'}, function (tagsResponse) {
                                 tagsResponse.data.forEach(function (tag) {

@@ -75,7 +75,8 @@ var smoisheleAnalyser = (function(clm, pModel){
 			face = {image: currentImage, leftEye: {x: positions[27][0]/currentImage.width, y: positions[27][1]/currentImage.height},
 										rightEye: {x: positions[32][0]/currentImage.width, y: positions[32][1]/currentImage.height},
 										mouth: {x: 0.5*(positions[57][0]+positions[60][0])/currentImage.width,
-												y: 0.5*(positions[57][1]+positions[60][1])/currentImage.height}};
+												y: 0.5*(positions[57][1]+positions[60][1])/currentImage.height},
+												quality: cTrack.getScore() };
 		
 		currentItem.callback(face);
 

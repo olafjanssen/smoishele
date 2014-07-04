@@ -4,12 +4,12 @@
  */
 var smoisheleDataView = (function($) {
 	'use strict';
-	
+
 	var faces = [];
 
 	function addFace(face) {
-		$('body').addClass('analysing');
-		
+		console.log(face);
+
 		faces.push(face);
 
 		var $img = $('<div class="input-thumb" id="inp-' + faces.length + '"></div>');
@@ -18,7 +18,7 @@ var smoisheleDataView = (function($) {
 		$('#inp-' + (faces.length - 50) ).remove();
 
 		setTimeout(function(){
-			$img.css('left', (Math.random()*100) +'%');
+			$img.css('left', (face.quality*100) +'%');
 			$img.css('top', (Math.random()*100) + '%');
 		}, 0);
 	}
