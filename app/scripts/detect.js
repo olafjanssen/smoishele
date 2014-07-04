@@ -16,7 +16,14 @@ var smoisheleDetect = (function(ccv, cascade){
 
 		// load the image given by the url in a canvas
 		var img = new Image();
+		
+		// return without a face if the image is corrupt
+		img.onerror = function() {
+			callback(null);
+		};
+
 		img.onload = function() {
+			console.log('img load');
 			var W = img.width > maxWidth ? maxWidth : img.width,
 				H = img.width > maxWidth ? img.height * maxWidth / img.width : img.height;
 
