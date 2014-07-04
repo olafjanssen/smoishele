@@ -57,6 +57,9 @@
         FB.login(function (response) {
             // handle the response
             $('body').addClass('analysing');
+            var length = document.querySelector('.progress-circle path').getTotalLength();
+            $('.progress-circle path').css('stroke-dasharray',length + ' ' + length)
+            .css('stroke-dashoffset', length);
 
             var userId = response.authResponse.userID;
 

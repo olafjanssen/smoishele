@@ -19,7 +19,7 @@ var smoisheleDataView = (function($) {
 
 		setTimeout(function(){
 			$img.css('left', (face.quality*100) +'%');
-			$img.css('top', (Math.random()*100) + '%');
+			$img.css('top', (face.happiness*100) + '%');
 		}, 0);
 	}
 

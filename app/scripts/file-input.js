@@ -9,6 +9,9 @@
 
 	function handleFileSelect(evt) {
 		$('body').addClass('analysing');
+		var length = document.querySelector('.progress-circle path').getTotalLength();
+		$('.progress-circle path').css('stroke-dasharray',length + ' ' + length)
+		.css('stroke-dashoffset', length);
 
 		// filter the input for image files
 		var files = evt.target.files;
@@ -37,7 +40,6 @@
 			}
 
 			batch.forEach(function(file) {
-				console.log(file);
 				var reader = new FileReader();
 				reader.onerror = (function() {
 					return function() {
