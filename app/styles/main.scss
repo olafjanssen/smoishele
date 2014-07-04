@@ -272,6 +272,47 @@ menu {
     left: 50%;
 }
 
+.analysing #graph {
+    opacity: 1;
+}
+
+#graph {
+    -webkit-transition: opacity 2s 1s ease;
+    position: absolute;
+    opacity: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+
+    div {
+        position: absolute;
+        height: 50%;
+        width: 50%;
+    }
+
+    div.good {
+        background-color: green;
+        right: 0;
+    }   
+
+    div.bad {
+        background-color: red;
+        left: 0;
+    }
+
+    div.happy {
+        opacity: 0.15;
+        top: 0;
+    }
+
+    div.sad {
+        opacity: 0.2;
+        bottom:0;
+    }
+}
+
+
 body {
     background: #ecf0f1;
 }
