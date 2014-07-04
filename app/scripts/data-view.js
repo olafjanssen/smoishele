@@ -11,9 +11,10 @@ var smoisheleDataView = (function($) {
 		$('body').addClass('analysing');
 		faces.push(face);
 
-		var $img = $('<div class="input-thumb"></div>');
+		var $img = $('<div class="input-thumb" id="inp-' + faces.length + '"></div>');
 		$img.css('background-image', 'url(' + face.image.url + ')');
 		$('#input-box').append($img);
+		$('#inp-' + (faces.length - 50) ).remove();
 
 		setTimeout(function(){
 			$img.css('left', (Math.random()*100) +'%');
