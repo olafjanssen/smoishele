@@ -47,7 +47,10 @@
 				reader.onload = (function() {
 					return function(e) {
 						count += 1;
-						$('#progress-text').html(count + ' / ' + expectedCount);
+						//$('#progress-text').html(count + ' / ' + expectedCount);
+						var length = document.querySelector('.progress-circle path').getTotalLength();
+						$('.progress-circle path').css('stroke-dasharray',length + ' ' + length)
+						.css('stroke-dashoffset', length * (1-count/expectedCount));
 
 						analyse(e.target.result, processBatch);
 					};

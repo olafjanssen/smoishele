@@ -13,6 +13,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 		resultHeight = 480,
 		faceBlend = {},
 		count = 0,
+		maxCount = 0,
 		doneCallback;
 
 	var grandBuffer = [];
@@ -114,6 +115,10 @@ var smoisheleBlender = (function(smoisheleDataView){
 			context.putImageData(imageData, 0, 0);
 			$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
 
+			var length = document.querySelector('.progress-circle path').getTotalLength();
+			$('.progress-circle path').css('stroke-dasharray',length + ' ' + length)
+			.css('stroke-dashoffset', length * (count/maxCount));
+
 
 			if(faces.length>0) {
 				performNextBlend();
@@ -136,6 +141,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 	function blend(faces_, callback) {
 		faces = faces_;
+		maxCount = faces_.length;
 		count = 0;
 		doneCallback = callback;
 		

@@ -144,6 +144,12 @@ table {
     width: 100%;
 }
 
+.smoishele-logo {
+    background-image: url('../images/smoishele-logo-square.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+}
 
 .facebook button {
     background-image: url('../images/facebook-icon.svg');
@@ -154,6 +160,32 @@ table {
     background-image: url('../images/upload-icon.svg');
     background-color: transparent;
     cursor: pointer;
+}
+
+.analysing .progress-circle,
+.blending .progress-circle {
+    display: block;
+}
+
+.progress-circle {
+    margin-left: -5.75em;
+    margin-top: -0.75em;
+    position: absolute;
+    height: 11.5em;    
+    width: 11.5em;
+    display: none;
+    left: 50%;
+}
+
+.analysing .progress-circle path {
+    -webkit-transition: all 0.3s ease;
+}
+
+.progress-circle path {
+    stroke: #f89406;
+    stroke-width: 5;
+    opacity: 1;
+    fill: none;
 }
 
 .input-option {
@@ -171,12 +203,12 @@ table {
     button, input, .upload-button {
         background-position: center center;
         background-size: contain;
-        margin: -2.5em -2.5em;
         position: absolute;
+        margin: -3.5em;
         border: none;
-        height: 5em;
+        height: 7em;
         outline: 0;
-        width: 5em;
+        width: 7em;
         left: 50%;
         top: 50%;
     }
@@ -185,6 +217,16 @@ table {
         opacity: 0.01;
         cursor: pointer;
     }
+}
+
+header {
+    background-image: url('../images/smoishele-logo.svg');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: contain;
+    margin: 0.5em;
+    width: 10em;
+    height: 2em;
 }
 
 .input-option.upload {
