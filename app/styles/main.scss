@@ -112,6 +112,23 @@ table {
     width: 100%;
 }
 
+#progress-text {
+    text-align: center;
+    font-family: Helvetica;
+    position: absolute;
+    margin-top: -0.5em;
+    font-weight: bold;
+    font-size: 2em;
+    display: none;
+    color: #333;
+    width: 100%;
+    top: 50%;
+}
+
+.analysing #progress-text {
+    display: block;
+}
+
 .globe {
     border-radius: 60em/6em 6em 0 0;
     background: #eef;

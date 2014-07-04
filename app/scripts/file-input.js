@@ -18,15 +18,15 @@
 			fileList.push(files[i]);
 		}
 
+		var count = 0,
+			expectedCount = fileList.length;
+
 		var start = 0,
 			step  = 1;
 		
 		smoisheleDataView.reset();
 		function processBatch(){
 			var batch = fileList.slice(start, start + step);
-
-			console.log('batch:');
-			console.log(batch);
 
 			start += step;
 
@@ -37,9 +37,20 @@
 			var expectedFaces = 0, analysedFaces = 0;
 
 			batch.forEach(function(file) {
+				console.log(file);
 				var reader = new FileReader();
+				reader.onerror = (function() {
+					return function() {
+						console.log('error!');
+						processBatch();
+					};
+				})(file);
+
 				reader.onload = (function() {
 					return function(e) {
+						count += 1;
+						$('#progress-text').html(count + ' / ' + expectedCount);
+
 						smoisheleDetect.getFaceFeatures(e.target.result,
 							function(face) {
 								if (face === null) {
@@ -48,15 +59,13 @@
 								}
 
 								expectedFaces += 1;
-								console.log(face);
-
+								
 								smoisheleAnalyser.getFaceFeatures(face, function(newFace){
 									analysedFaces += 1;
 									if (newFace){
 										smoisheleDataView.addFace(newFace);
 									}
-									console.log(newFace);
-
+								
 									if (analysedFaces === expectedFaces){
 										processBatch();
 									}

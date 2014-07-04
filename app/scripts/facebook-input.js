@@ -11,7 +11,9 @@
         // for FB.getLoginStatus().
         if (response.status === 'connected') {
             // Logged into your app and Facebook.
-            testAPI();
+            FB.api('/me/permissions', 'delete', function(response) {
+                console.log(response); // true
+            });
         } else if (response.status === 'not_authorized') {
             // The person is logged into Facebook, but not your app.
             document.getElementById('status').innerHTML = 'Please log ' +
@@ -51,23 +53,16 @@
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
-    // Here we run a very simple test of the Graph API after login is
-    // successful.  See statusChangeCallback() for when this call is made.
-    function testAPI() {
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function (response) {
-            console.log('Successful login for: ' + response.name);
-        });
-    }
-
     function handleConnect() {
         FB.login(function (response) {
             // handle the response
-            console.log(response);
 
             var userId = response.authResponse.userID;
 
             FB.api('/me/photos', {fields: 'images', limit: 200}, function (photosResponse) {
+
+                var count = 0,
+                    expectedCount = photosResponse.data.length;
 
                 var start = 0,
                     step  = 1;
@@ -75,9 +70,6 @@
                 smoisheleDataView.reset();
                 function processBatch() {
                     var batch = photosResponse.data.slice(start, start + step);
-
-                    console.log('batch:');
-                    console.log(batch);
 
                     start += step;
 
@@ -88,9 +80,10 @@
                     var expectedFaces = 0, analysedFaces = 0;
 
                     batch.forEach(function(photo) {
+                        count += 1;
+                        $('#progress-text').html(count + ' / ' + expectedCount);
 
                         FB.api('/' + photo.id + '/tags', {fields: 'id,x,y'}, function (tagsResponse) {
-                                console.log(tagsResponse);
                                 tagsResponse.data.forEach(function (tag) {
                                     if (tag.id === userId) {
                                         smoisheleDetect.getFaceFeatures(photo.images[0].source, function(face) {
@@ -100,14 +93,12 @@
                                             }
 
                                             expectedFaces += 1;
-                                            console.log(face);
 
                                             smoisheleAnalyser.getFaceFeatures(face, function(newFace) {
                                                 analysedFaces += 1;
                                                 if (newFace){
                                                     smoisheleDataView.addFace(newFace);
                                                 }
-                                                console.log(newFace);
 
                                                 if (analysedFaces === expectedFaces){
                                                     processBatch();
