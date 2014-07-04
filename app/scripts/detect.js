@@ -68,7 +68,9 @@ var smoisheleDetect = (function(ccv, cascade){
 					faceCanvas.setAttribute('height', box.height);
 					var faceData = context.getImageData(box.x, box.y, box.width, box.height);
 					faceContext.putImageData(faceData,0,0);
-					var face = { image: {url: faceCanvas.toDataURL('image/png'), width: faceInPhoto.width, height: faceInPhoto.height} };
+					var face = { image: {url: faceCanvas.toDataURL('image/png'),
+								width: faceInPhoto.width,
+								height: faceInPhoto.height} };
 					callback(face);
 					callbackCalled = true;
 				});

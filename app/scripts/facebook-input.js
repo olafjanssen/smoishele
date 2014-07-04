@@ -1,6 +1,6 @@
-/* global FB, smoisheleAnalyser, smoisheleBlender, smoisheleDetect, smoisheleDataView */
+/* global FB, smoisheleBlender, smoisheleDataView, analyse */
 
-(function facebookInput(smoisheleAnalyser, smoisheleBlender, smoisheleDetect, smoisheleDataView) {
+(function facebookInput(smoisheleBlender, smoisheleDataView) {
     'use strict';
 
     // This is called with the results from from FB.getLoginStatus().
@@ -77,8 +77,6 @@
                         smoisheleBlender.blend(smoisheleDataView.getFaces());
                     }
 
-                    var expectedFaces = 0, analysedFaces = 0;
-
                     batch.forEach(function(photo) {
                         count += 1;
                         $('#progress-text').html(count + ' / ' + expectedCount);
@@ -86,25 +84,7 @@
                         FB.api('/' + photo.id + '/tags', {fields: 'id,x,y'}, function (tagsResponse) {
                                 tagsResponse.data.forEach(function (tag) {
                                     if (tag.id === userId) {
-                                        smoisheleDetect.getFaceFeatures(photo.images[0].source, function(face) {
-                                            if (face === null) {
-                                                processBatch();
-                                                return;
-                                            }
-
-                                            expectedFaces += 1;
-
-                                            smoisheleAnalyser.getFaceFeatures(face, function(newFace) {
-                                                analysedFaces += 1;
-                                                if (newFace){
-                                                    smoisheleDataView.addFace(newFace);
-                                                }
-
-                                                if (analysedFaces === expectedFaces){
-                                                    processBatch();
-                                                }
-                                            });
-                                        }, {x: 0.01 * tag.x, y: 0.01 * tag.y});
+                                        analyse(photo.images[0].source, processBatch, {x: 0.01 * tag.x, y: 0.01 * tag.y});
                                     }
                                 });
                             });
@@ -121,4 +101,4 @@
 
     document.getElementById('facebook-connect-button').addEventListener('click', handleConnect, false);
 
-})(smoisheleAnalyser, smoisheleBlender, smoisheleDetect, smoisheleDataView);
+})(smoisheleBlender, smoisheleDataView);

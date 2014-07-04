@@ -1,4 +1,4 @@
-/* global smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView */
+/* global smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView, analyse */
 
 /** 
  *	This object starts a blend based on file input.
@@ -34,8 +34,6 @@
 				smoisheleBlender.blend(smoisheleDataView.getFaces());
 			}
 
-			var expectedFaces = 0, analysedFaces = 0;
-
 			batch.forEach(function(file) {
 				console.log(file);
 				var reader = new FileReader();
@@ -51,27 +49,7 @@
 						count += 1;
 						$('#progress-text').html(count + ' / ' + expectedCount);
 
-						smoisheleDetect.getFaceFeatures(e.target.result,
-							function(face) {
-								if (face === null) {
-									processBatch();
-									return;
-								}
-
-								expectedFaces += 1;
-								
-								smoisheleAnalyser.getFaceFeatures(face, function(newFace){
-									analysedFaces += 1;
-									if (newFace){
-										smoisheleDataView.addFace(newFace);
-									}
-								
-									if (analysedFaces === expectedFaces){
-										processBatch();
-									}
-								});
-
-							});
+						analyse(e.target.result, processBatch);
 					};
 				})(file);
 				reader.readAsDataURL(file);

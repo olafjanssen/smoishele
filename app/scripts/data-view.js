@@ -4,11 +4,12 @@
  */
 var smoisheleDataView = (function($) {
 	'use strict';
-
+	
 	var faces = [];
 
 	function addFace(face) {
 		$('body').addClass('analysing');
+		
 		faces.push(face);
 
 		var $img = $('<div class="input-thumb" id="inp-' + faces.length + '"></div>');
