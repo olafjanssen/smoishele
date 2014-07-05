@@ -14,6 +14,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 		faceBlend = {},
 		count = 0,
 		maxCount = 0,
+		totalQuality = 0,
 		doneCallback;
 
 	var grandBuffer = [];
@@ -102,15 +103,20 @@ var smoisheleBlender = (function(smoisheleDataView){
 			// put the image into a buffer
 			var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
 			for (var d=0;d<grandBuffer.length;d++) {
-				grandBuffer[d] += imageData.data[d];
+				if (d%4<3){
+					grandBuffer[d] += face.quality * imageData.data[d];
+				}
 			}
 			
 			// update the intermediate result
 			count += 1;
+			totalQuality += face.quality;
 			context.clearRect(0, 0, canvas.width, canvas.height);
 
 			for (d=0;d<grandBuffer.length;d++) {
-				imageData.data[d] = grandBuffer[d]/count;
+				if (d%4<3){
+					imageData.data[d] = grandBuffer[d]/totalQuality;
+				}
 			}
 			context.putImageData(imageData, 0, 0);
 			$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
