@@ -172,14 +172,12 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 	function finishBlend() {
 
-		// window.open(canvas.toDataURL('image/png;base64;'), 'before');
-		// autoContrast();
-		// window.open(canvas.toDataURL('image/png;base64;'), 'after');
 		$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
 
 	    var exportedImage = canvas.toDataURL('image/png;base64;');
 		$('body').removeClass('blending');
 		$('body').addClass('finished-blending');
+		
 		doneCallback(exportedImage);
 	}
 

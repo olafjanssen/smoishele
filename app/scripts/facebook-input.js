@@ -1,6 +1,6 @@
-/* global FB, smoisheleBlender, smoisheleDataView, analyse */
+/* global FB, smoisheleBlender, smoisheleDataView, smoisheleSharing, analyse */
 
-(function facebookInput(smoisheleBlender, smoisheleDataView) {
+(function facebookInput(smoisheleBlender, smoisheleDataView, smoisheleSharing) {
     'use strict';
 
     // This is called with the results from from FB.getLoginStatus().
@@ -63,7 +63,7 @@
 
             var userId = response.authResponse.userID;
 
-            FB.api('/me/photos', {fields: 'images', limit: 200}, function (photosResponse) {
+            FB.api('/me/photos', {fields: 'images', limit: 20}, function (photosResponse) {
 
                 var count = 0,
                     expectedCount = photosResponse.data.length;
@@ -78,7 +78,9 @@
                     start += step;
 
                     if (batch.length === 0) {
-                        smoisheleBlender.blend(smoisheleDataView.getFaces());
+                        smoisheleBlender.blend(smoisheleDataView.getFaces(), function(image){
+                            smoisheleSharing.setResult({url: image, message: 'I smoisheled the photo\'s I\'m tagged in using smoishele.com!'});
+                        });
                     }
 
                     batch.forEach(function(photo) {
@@ -107,4 +109,4 @@
 
     document.getElementById('facebook-connect-button').addEventListener('click', handleConnect, false);
 
-})(smoisheleBlender, smoisheleDataView);
+})(smoisheleBlender, smoisheleDataView, smoisheleSharing);

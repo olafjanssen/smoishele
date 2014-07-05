@@ -1,10 +1,10 @@
-/* global smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView, analyse */
+/* global smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView, smoisheleSharing, analyse */
 
 /** 
  *	This object starts a blend based on file input.
  *	
  */
-(function fileInput(smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView){
+(function fileInput(smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView, smoisheleSharing){
 	'use strict';
 
 	function handleFileSelect(evt) {
@@ -36,7 +36,9 @@
 			start += step;
 
 			if (batch.length === 0) {
-				smoisheleBlender.blend(smoisheleDataView.getFaces());
+				smoisheleBlender.blend(smoisheleDataView.getFaces(), function(image){
+					smoisheleSharing.setResult({url: image, message: 'I smoisheled some photo\'s on smoishele.com!'});
+				});
 			}
 
 			batch.forEach(function(file) {
@@ -67,4 +69,4 @@
 	}
 
 	document.getElementById('file-upload-button').addEventListener('change', handleFileSelect, false);
-})(smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView);
+})(smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView, smoisheleSharing);
