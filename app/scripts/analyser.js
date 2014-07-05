@@ -10,7 +10,7 @@ var smoisheleAnalyser = (function(clm, pModel){
 
 	var canvas = document.createElement('canvas'),
 		context = canvas.getContext('2d'),
-		cTrack = new clm.tracker({stopOnConvergence : true, scoreThreshold: 0.30}),
+		cTrack = new clm.tracker({stopOnConvergence : true, scoreThreshold: 0.10}),
 		queue = [],
 		inProgress = false,
 		blockResult = false,
