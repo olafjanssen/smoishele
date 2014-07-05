@@ -5,7 +5,8 @@
 var smoisheleDataView = (function($) {
 	'use strict';
 
-	var faces = [];
+	var faces = [],
+		MAX_VISIBLE_FACES = 100;
 
 	function addFace(face) {
 		console.log(face);
@@ -15,7 +16,7 @@ var smoisheleDataView = (function($) {
 		var $img = $('<div class="input-thumb" id="inp-' + faces.length + '"></div>');
 		$img.css('background-image', 'url(' + face.image.url + ')');
 		$('#input-box').append($img);
-		$('#inp-' + (faces.length - 50) ).remove();
+		$('#inp-' + (faces.length - MAX_VISIBLE_FACES) ).remove();
 
 		setTimeout(function(){
 			$img.css('left', (face.quality*100) +'%');
