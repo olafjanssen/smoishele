@@ -89,6 +89,35 @@ var smoisheleBlender = (function(smoisheleDataView){
         context.transform(affinematrix[0],affinematrix[1],affinematrix[2],affinematrix[3],affinematrix[4],affinematrix[5]);
 	}
 
+	function autoContrast() {
+		var min = 255, max = 0, d, i, grayValue, stretch;
+		
+		var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
+		
+		// find extremes
+		for (d=0;d<imageData.data.length;d+=4) {
+			grayValue = 0.21*imageData.data[d] + 0.72*imageData.data[d+1] + 0.07*imageData.data[d+2];
+			if (grayValue>0){
+				min = Math.min(min, grayValue);
+			}
+			max = Math.max(max, grayValue);
+		}
+		stretch = 255.0/(max-min);
+
+		console.log('gray: ' + min + ' to ' + max + ' ' + stretch);
+
+		// stretch contrast
+		for (d=0;d<imageData.data.length;d+=4) {
+			grayValue = 0.21*imageData.data[d] + 0.72*imageData.data[d+1] + 0.07*imageData.data[d+2];
+			
+			for(i=0;i<3;i++){
+				imageData.data[d+i] = Math.max(Math.min(255, (imageData.data[d+i] - min) * stretch), 0);
+			}
+		}
+
+		context.putImageData(imageData, 0, 0);
+	}
+
 	function performNextBlend(){
 		var face = faces.pop();
 				
@@ -99,6 +128,9 @@ var smoisheleBlender = (function(smoisheleDataView){
 			transformContext(context, face, faceBlend);
 			context.drawImage(img, 0, 0);
 			context.restore();
+
+			autoContrast();
+
 
 			// put the image into a buffer
 			var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
@@ -138,7 +170,13 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 	}
 
-	function finishBlend(){
+	function finishBlend() {
+
+		// window.open(canvas.toDataURL('image/png;base64;'), 'before');
+		// autoContrast();
+		// window.open(canvas.toDataURL('image/png;base64;'), 'after');
+		$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
+
 	    var exportedImage = canvas.toDataURL('image/png;base64;');
 		$('body').removeClass('blending');
 		$('body').addClass('finished-blending');
