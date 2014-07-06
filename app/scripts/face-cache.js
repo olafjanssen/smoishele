@@ -13,7 +13,7 @@ var smoisheleFaceCache = (function() {
 		if (faces[hash] === undefined) {
 			faces[hash] = [ face ];
 		} else {
-			face[hash].push(face);
+			faces[hash].push(face);
 		}
 	}
 
