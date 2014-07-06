@@ -74,6 +74,8 @@ var smoisheleSharing = (function() {
 	function setResult(result) {
 		message = result.message;
 		imageUrl = result.url;
+
+		document.getElementById('image-download').href = result.url;
 	}
 
 	document.getElementById('facebook-share').addEventListener('click', shareOnFacebook, false);
