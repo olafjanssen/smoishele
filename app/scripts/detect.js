@@ -90,7 +90,7 @@ var smoisheleDetect = (function(ccv, cascade){
 			ccv.detect_objects({ 'canvas' : canvas,
 						 'cascade' : cascade,
 						 'interval' : 5,
-						 'min_neighbors' : 3,
+						 'min_neighbors' : 1,
 						 'async' : true,
 						 'worker' : 1 })(post);
 			/*jshint camelcase: true */
