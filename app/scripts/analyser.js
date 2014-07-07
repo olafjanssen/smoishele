@@ -28,7 +28,6 @@ var smoisheleAnalyser = (function(clm, pModel){
 		// load the image given by the url in a canvas
 		var img = new Image();
 		img.onload = function() {
-			console.log('loaded');
 			blockResult = false;
 			canvas.setAttribute('width', img.width);
 			canvas.setAttribute('height', img.height);

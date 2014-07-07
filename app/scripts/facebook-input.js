@@ -67,7 +67,7 @@
 
             var userId = response.authResponse.userID;
 
-            FB.api('/me/photos', {fields: 'images', limit: 20}, function (photosResponse) {
+            FB.api('/me/photos', {fields: 'images', limit: 400}, function (photosResponse) {
 
                 var count = 0,
                     expectedCount = photosResponse.data.length;

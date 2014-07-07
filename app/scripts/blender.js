@@ -120,7 +120,11 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 	function performNextBlend(){
 		var face = faces.pop();
-				
+		
+		if (face === undefined){
+			finishBlend();
+		}
+
 		var img = new Image();
 		img.onload = function() {
 			context.save();
@@ -165,7 +169,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 			}
 		};
 		
-		// img.crossOrigin = 'Anonymous';
+		// Since we assume the url to be a data url, we do not need set cross-origin
 		img.src = face.image.url;
 
 	}
