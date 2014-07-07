@@ -165,7 +165,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 			}
 		};
 		
-		img.crossOrigin = 'Anonymous';
+		// img.crossOrigin = 'Anonymous';
 		img.src = face.image.url;
 
 	}

@@ -9,6 +9,13 @@ var smoisheleDetect = (function(ccv, cascade){
 	var maxWidth = 1024,
 		calls = 0;
 
+
+	// check if url is a data url, taken from https://gist.github.com/bgrins/6194623
+	function isDataURL(s) {
+	    return !!s.match(isDataURL.regex);
+	}
+	isDataURL.regex = /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i;
+
 	function processImage(url, callback, assumedLocation) {
 
 		var canvas = document.createElement('canvas'),
@@ -89,7 +96,10 @@ var smoisheleDetect = (function(ccv, cascade){
 			/*jshint camelcase: true */
 
 		};
-		img.crossOrigin = 'Anonymous';
+		if (!isDataURL(url)) {
+			img.crossOrigin = 'Anonymous';
+		}
+		console.log('detect: ' + url);
 		img.src = url;
 	}
 

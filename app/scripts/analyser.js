@@ -17,8 +17,7 @@ var smoisheleAnalyser = (function(clm, pModel){
 		currentItem;
 
 	cTrack.init(pModel);
-	//cTrack.setResponseMode('blend', ['raw', 'sobel', 'lbp']);
-
+	
 	function processQueue() {
 		if (queue.length === 0){
 			return;
@@ -29,6 +28,7 @@ var smoisheleAnalyser = (function(clm, pModel){
 		// load the image given by the url in a canvas
 		var img = new Image();
 		img.onload = function() {
+			console.log('loaded');
 			blockResult = false;
 			canvas.setAttribute('width', img.width);
 			canvas.setAttribute('height', img.height);
@@ -36,7 +36,12 @@ var smoisheleAnalyser = (function(clm, pModel){
 			cTrack.reset();
 			cTrack.start(canvas, null);
 		};
-		img.crossOrigin = 'Anonymous';
+		img.onerror = function() {
+			console.log('error loading img');
+			processQueue();
+		};
+
+		// Since we assume the url to be a data url, we do not need set cross-origin
 		img.src = currentItem.face.image.url;
 	}
 
