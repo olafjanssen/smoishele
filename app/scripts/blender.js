@@ -104,8 +104,6 @@ var smoisheleBlender = (function(smoisheleDataView){
 		}
 		stretch = 255.0/(max-min);
 
-		console.log('gray: ' + min + ' to ' + max + ' ' + stretch);
-
 		// stretch contrast
 		for (d=0;d<imageData.data.length;d+=4) {
 			grayValue = 0.21*imageData.data[d] + 0.72*imageData.data[d+1] + 0.07*imageData.data[d+2];
@@ -116,6 +114,21 @@ var smoisheleBlender = (function(smoisheleDataView){
 		}
 
 		context.putImageData(imageData, 0, 0);
+	}
+
+	function setContrast(contrast){
+
+		var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
+		var data = imageData.data;
+	    var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+	    for(var i=0;i<data.length;i+=4) {
+			data[i] = factor * (data[i] - 128) + 128;
+			data[i+1] = factor * (data[i+1] - 128) + 128;
+			data[i+2] = factor * (data[i+2] - 128) + 128;
+	    }
+		context.putImageData(imageData, 0, 0);
+	
 	}
 
 	function performNextBlend(){
@@ -175,6 +188,8 @@ var smoisheleBlender = (function(smoisheleDataView){
 	}
 
 	function finishBlend() {
+		// enhance the contrast in the final image
+		setContrast(50.0);
 
 		$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
 
