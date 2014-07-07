@@ -11,9 +11,9 @@
         // for FB.getLoginStatus().
         if (response.status === 'connected') {
             // Logged into your app and Facebook.
-            // FB.api('/me/permissions', 'delete', function(response) { TODO PUT BACK
-            //     console.log(response); // true
-            // });
+            FB.api('/me/permissions', 'delete', function(response) {
+                console.log(response); // true
+            });
         } else if (response.status === 'not_authorized') {
             // The person is logged into Facebook, but not your app.
             document.getElementById('status').innerHTML = 'Please log ' +
@@ -55,6 +55,10 @@
 
     function handleConnect() {
         FB.login(function (response) {
+            if (response.authResponse === null) {
+                return;
+            }
+
             // handle the response
             $('body').addClass('analysing');
             var length = document.querySelector('.progress-circle path').getTotalLength();
