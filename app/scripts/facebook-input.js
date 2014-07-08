@@ -88,8 +88,6 @@
                     }
 
                     batch.forEach(function(photo) {
-                        console.log(photo);
-
                         count += 1;
                         var length = document.querySelector('.progress-circle path').getTotalLength();
                         $('.progress-circle path').css('stroke-dasharray',length + ' ' + length)
@@ -98,7 +96,6 @@
                         FB.api('/' + photo.id + '/tags', {fields: 'id,x,y'}, function (tagsResponse) {
                                 tagsResponse.data.forEach(function (tag) {
                                     if (tag.id === userId) {
-                                        console.log('analysing');
                                         analyse(photo.images[0].source, processBatch, {x: 0.01 * tag.x, y: 0.01 * tag.y});
                                     }
                                 });

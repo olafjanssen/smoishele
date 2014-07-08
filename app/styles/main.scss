@@ -82,7 +82,7 @@ table {
 .input-thumb {
     -webkit-transition: all 3s ease;
     background-position: center center;
-    border: 0.5em solid #666;
+    border: 0.5em solid #f89406;
     background-size: cover;
     display: inline-block;
     margin: -2.5em -2.5em;
@@ -127,15 +127,6 @@ table {
 
 .analysing #progress-text {
     display: block;
-}
-
-.globe {
-    border-radius: 60em/6em 6em 0 0;
-    background: #eef;
-    position: fixed;
-    width: 100%;
-    height: 5em;
-    bottom: 0;
 }
 
 .box-container {
@@ -224,6 +215,7 @@ header {
     background-repeat: no-repeat;
     background-position: 0 0;
     background-size: contain;
+    position: absolute;
     margin: 0.5em;
     width: 10em;
     height: 2em;
@@ -278,6 +270,8 @@ menu {
 
 #graph {
     -webkit-transition: opacity 2s 1s ease;
+    background-position: center;
+    background-size: cover;
     position: absolute;
     opacity: 0;
     bottom: 0;

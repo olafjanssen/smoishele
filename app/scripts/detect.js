@@ -6,9 +6,8 @@
 var smoisheleDetect = (function(ccv, cascade){
 	'use strict';
 
-	var maxWidth = 1024,
+	var maxWidth = 640,
 		calls = 0;
-
 
 	// check if url is a data url, taken from https://gist.github.com/bgrins/6194623
 	function isDataURL(s) {
@@ -38,6 +37,8 @@ var smoisheleDetect = (function(ccv, cascade){
 			canvas.setAttribute('width', W);
 			canvas.setAttribute('height', H);
 			context.drawImage(img,0,0,W,H);
+
+			$('#graph').css('background-image', 'url(' + canvas.toDataURL() + ')');
 
 			// detect faces in the image using ccv
 			/*jshint camelcase: false */
@@ -93,6 +94,7 @@ var smoisheleDetect = (function(ccv, cascade){
 						 'min_neighbors' : 1,
 						 'async' : true,
 						 'worker' : 1 })(post);
+
 			/*jshint camelcase: true */
 
 		};
