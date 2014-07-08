@@ -69,6 +69,7 @@ table {
 }
 
 #input-box {
+    -webkit-transition: opacity 0.5s ease;
     position: absolute;
     bottom: 2em;
     right: 2em;
@@ -76,7 +77,8 @@ table {
     top: 2em;
 }
 
-#analysed-folder {
+.cancelable #input-box {
+    opacity: 0;
 }
 
 .input-thumb {
@@ -278,32 +280,6 @@ menu {
     right: 0;
     left: 0;
     top: 0;
-
-    div {
-        position: absolute;
-        height: 50%;
-        width: 50%;
-    }
-
-    div.good {
-        background-color: green;
-        right: 0;
-    }   
-
-    div.bad {
-        background-color: red;
-        left: 0;
-    }
-
-    div.happy {
-        opacity: 0.15;
-        top: 0;
-    }
-
-    div.sad {
-        opacity: 0.2;
-        bottom:0;
-    }
 }
 
 

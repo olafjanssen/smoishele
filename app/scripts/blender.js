@@ -228,9 +228,18 @@ var smoisheleBlender = (function(smoisheleDataView){
 		}, 2000);
 	}
 
-	document.getElementById('result').addEventListener('click', function(){
-		$('body').toggleClass('finished-blending');
+	document.getElementById('smoishel-button').addEventListener('click', function(){
+		document.body.classList.toggle('finished-blending');
 	}, false);
+
+	document.getElementById('smoishel-button').addEventListener('mouseenter', function(){
+		document.body.classList.add('cancelable');
+	}, false);
+
+	document.getElementById('smoishel-button').addEventListener('mouseleave', function(){
+		document.body.classList.remove('cancelable');
+	}, false);
+
 
 	return { blend: blend, init: function(){} };
 })(smoisheleDataView);
