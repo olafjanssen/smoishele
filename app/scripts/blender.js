@@ -171,6 +171,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 					imageData.data[d] = grandBuffer[d] / totalQuality;
 				}
 			}
+
 			context.putImageData(imageData, 0, 0);
 			$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
 
@@ -207,6 +208,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 	function blend(faces_, callback) {
 		faces = faces_;
 		maxCount = faces_.length;
+		totalQuality = 0;
 		count = 0;
 		doneCallback = callback;
 		
@@ -228,7 +230,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 		}, 2000);
 	}
 
-	document.getElementById('smoishel-button').addEventListener('click', function(){
+	document.getElementById('result').addEventListener('click', function(){
 		document.body.classList.toggle('finished-blending');
 	}, false);
 
