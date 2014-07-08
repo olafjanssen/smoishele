@@ -21,8 +21,12 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 	var canvas = document.createElement('canvas'),
 		context = canvas.getContext('2d');
+
+	// set up the result canvas
 	canvas.setAttribute('width', resultWidth);
 	canvas.setAttribute('height', resultHeight);
+	context.fillStyle = 'rgba(0, 0, 0, 0)';
+
 
 	// computes the average proportions of the data to be blended
 	function init(){
@@ -141,7 +145,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 		var img = new Image();
 		img.onload = function() {
 			context.save();
-			context.clearRect(0, 0, canvas.width, canvas.height);
+			context.fillRect(0,0, canvas.width, canvas.height);
 			transformContext(context, face, faceBlend);
 			context.drawImage(img, 0, 0);
 			context.restore();
@@ -164,7 +168,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 			for (d=0;d<grandBuffer.length;d++) {
 				if (d%4<3){
-					imageData.data[d] = grandBuffer[d]/totalQuality;
+					imageData.data[d] = grandBuffer[d] / totalQuality;
 				}
 			}
 			context.putImageData(imageData, 0, 0);
