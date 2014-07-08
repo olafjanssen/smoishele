@@ -3,6 +3,11 @@
 (function facebookInput(smoisheleBlender, smoisheleDataView, smoisheleSharing) {
     'use strict';
 
+    var canceled = false;
+    document.getElementById('smoishel-button').addEventListener('click', function(){
+        canceled = true;
+    }, false);
+
     // This is called with the results from from FB.getLoginStatus().
     function statusChangeCallback(response) {
         // The response object is returned with a status field that lets the
@@ -54,6 +59,8 @@
     }(document, 'script', 'facebook-jssdk'));
 
     function handleConnect() {
+        canceled = false;
+
         FB.login(function (response) {
             if (response.authResponse === null) {
                 return;
@@ -81,10 +88,11 @@
 
                     start += step;
 
-                    if (batch.length === 0) {
+                    if (batch.length === 0 || canceled) {
                         smoisheleBlender.blend(smoisheleDataView.getFaces(), function(image){
                             smoisheleSharing.setResult({url: image, message: 'I smoisheled the photo\'s I\'m tagged in using smoishele.com!'});
                         });
+                        return;
                     }
 
                     batch.forEach(function(photo) {

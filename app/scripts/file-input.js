@@ -7,7 +7,14 @@
 (function fileInput(smoisheleDetect, smoisheleAnalyser, smoisheleBlender, smoisheleDataView, smoisheleSharing){
 	'use strict';
 
+    var canceled = false;
+    document.getElementById('smoishel-button').addEventListener('click', function(){
+        canceled = true;
+    }, false);
+
 	function handleFileSelect(evt) {
+		canceled = false;
+
 		$('body').addClass('analysing');
 		var length = document.querySelector('.progress-circle path').getTotalLength();
 		$('.progress-circle path').css('stroke-dasharray',length + ' ' + length)
@@ -35,10 +42,11 @@
 
 			start += step;
 
-			if (batch.length === 0) {
+			if (batch.length === 0 || canceled) {
 				smoisheleBlender.blend(smoisheleDataView.getFaces(), function(image){
 					smoisheleSharing.setResult({url: image, message: 'I smoisheled some photo\'s on smoishele.com!'});
 				});
+				return;
 			}
 
 			batch.forEach(function(file) {

@@ -239,7 +239,24 @@ header {
     background-color: #fff;
     position: absolute;
     overflow: hidden;
+    cursor: pointer;
     left: 50%;
+}
+
+.analysing.cancelable .smoishele-logo {
+    background-image: none;
+
+    &::after {
+        background-color: #666;
+        border-radius: 0.4em;
+        position: absolute;
+        margin: -1.5em;
+        content: '';
+        height: 3em;
+        width: 3em;
+        left: 50%;
+        top: 50%;
+    }
 }
 
 .finished-blending .input-option.smoishele-logo {
