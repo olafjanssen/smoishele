@@ -46,6 +46,13 @@ table {
     border-spacing: 0;
 }
 
+:focus {
+    outline:none;
+}
+
+::-moz-focus-inner {
+    border:0;
+}
 
 .blend-box {
     display: none;
@@ -125,6 +132,40 @@ table {
     color: #333;
     width: 100%;
     top: 50%;
+}
+
+.share-button {
+    -webkit-transition: opacity 0.5s ease;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #666;
+    background-size: 90%;
+    position: absolute;
+    border-radius: 4em;
+    cursor: pointer;
+    font-size: 1em;
+    display: block;
+    border: none;
+    height: 4em;
+    opacity: 0;
+    width: 4em;
+    left: 50%;
+    top: 50%;
+}
+
+.finished-blending.contains-result .share-button {
+    -webkit-transition: opacity 0.5s 1s ease;
+    opacity: 1;
+}
+
+#image-download {
+    background-image: url('../images/download-icon.svg');
+    margin: 13em 5em;
+}
+
+#facebook-share {
+    background-image: url('../images/facebook-icon.svg');
+    margin: 13em 0.5em;
 }
 
 .analysing #progress-text {

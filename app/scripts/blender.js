@@ -201,6 +201,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 	    var exportedImage = canvas.toDataURL('image/png;base64;');
 		$('body').removeClass('blending');
 		$('body').addClass('finished-blending');
+		$('body').addClass('contains-result');
 		
 		doneCallback(exportedImage);
 	}
