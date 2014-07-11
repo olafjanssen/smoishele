@@ -25,6 +25,11 @@ var smoisheleFaceCache = (function() {
 		faces = {};
 	}
 
+	document.getElementById('dbase-download').addEventListener('click', function(){
+		var newWindow = window.open('', '_blank');
+		newWindow.document.write(JSON.stringify(faces));
+	}, false);
+
 	return {addFace: addFace, getFaces: getFaces, reset: reset};
 })();
 

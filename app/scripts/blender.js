@@ -335,8 +335,6 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 	function finishBlend() {
 		// enhance the contrast in the final image
-		window.open(canvas.toDataURL(),'_blank');
-		//setContrast(25.0);
 		autoContrast();
 
 		$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
