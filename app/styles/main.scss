@@ -1,3 +1,7 @@
+@font-face {
+  font-family: Rossano;
+  src: url(../fonts/rossano.regular.ttf);
+}
 
 .blend-box {
     display: none;
@@ -199,10 +203,6 @@
 }
 
 header {
-    background-image: url('../images/smoishele-logo.svg');
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    background-size: contain;
     position: absolute;
     margin: 0.5em;
     width: 10em;
@@ -259,6 +259,12 @@ header {
     -webkit-transform: none;
 }
 
+.during-intro .input-option {
+  -webkit-transform: rotate(-1800deg);
+  -webkit-transition: none;
+  opacity: 0;
+}
+
 menu {
     position: absolute;
     margin-left: -10em;
@@ -289,7 +295,63 @@ menu {
     top: 0;
 }
 
+#introduction {
+  position: absolute;
+  margin-left: -10em;
+  text-align: center;
+  margin-top: -3em;
+  line-height: 2em;
+  font-size: 2em;
+  height: 6em;
+  width: 20em;
+  left: 50%;
+  top: 50%;
+}
+
+#introduction .intro1 {
+  transition: opacity 1s ease;
+  opacity: 0;
+}
+
+.show-intro #introduction .intro1 {
+  opacity: 1;
+}
+
+#introduction .intro2 {
+  transition: opacity 1s ease 1s;
+  opacity: 0;
+}
+
+.show-intro #introduction .intro2 {
+  opacity: 1;
+}
+
+#introduction .intro3 {
+  transition: opacity 1s ease 2s;
+  opacity: 0;
+}
+
+.show-intro #introduction .intro3 {
+  opacity: 1;
+}
+
+
+
+h1 {
+  margin-left: 0.15em;
+  font-size: 2em;
+}
+
+h1::before {
+  position: relative;
+  content: ":";
+  top: -0.15em;
+}
+
+
 
 body {
+    font-family: Rossano;
     background: #ecf0f1;
+    color: #666666;
 }
