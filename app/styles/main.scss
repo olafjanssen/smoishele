@@ -276,8 +276,15 @@ menu {
     left: 50%;
 }
 
-#admin-menu {
+#advanced {
+    position: absolute;
     display: none;
+    right: 0;
+    top: 0;
+}
+
+#advanced:target {
+  display: block;
 }
 
 .analysing #graph {
