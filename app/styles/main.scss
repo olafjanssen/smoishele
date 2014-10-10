@@ -102,6 +102,7 @@
     top: 50%;
 }
 
+.finished-blending.contains-result #contrast-slider,
 .finished-blending.contains-result .share-button {
     -webkit-transition: opacity 0.5s 1s ease;
     opacity: 1;
@@ -376,8 +377,6 @@ menu {
   opacity: 1;
 }
 
-
-
 h1 {
   margin-left: 0.15em;
   cursor: pointer;
@@ -390,10 +389,15 @@ h1::before {
   top: -0.15em;
 }
 
-
-
 body {
     font-family: Rossano;
     background: #ecf0f1;
     color: #666666;
+}
+
+#contrast-slider {
+  -webkit-transition: opacity 0.5s ease;
+  margin: 28.5em 1em 0;
+  width: 13em;
+  opacity: 0;
 }

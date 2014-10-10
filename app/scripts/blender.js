@@ -20,7 +20,8 @@ var smoisheleBlender = (function(smoisheleDataView){
 	var grandBuffer = [];
 
 	var canvas = document.createElement('canvas'),
-		context = canvas.getContext('2d');
+		context = canvas.getContext('2d'),
+        unfilteredImageDataBuffer;
 
 	// set up the result canvas
 	canvas.setAttribute('width', resultWidth);
@@ -93,188 +94,24 @@ var smoisheleBlender = (function(smoisheleDataView){
         context.transform(affinematrix[0],affinematrix[1],affinematrix[2],affinematrix[3],affinematrix[4],affinematrix[5]);
 	}
 
-	/**
-	 * Converts an RGB color value to HSL. Conversion formula
-	 * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
-	 * Assumes r, g, and b are contained in the set [0, 255] and
-	 * returns h, s, and l in the set [0, 1].
-	 *
-	 * @param   Number  r       The red color value
-	 * @param   Number  g       The green color value
-	 * @param   Number  b       The blue color value
-	 * @return  Array           The HSL representation
-	 */
-	function rgbToHsl(r, g, b) {
-	    r /= 255;
-	    g /= 255;
-	    b /= 255;
+	function setContrast(contrast){
+        console.log('setting contrast:' + contrast);
 
-	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-	    var h, s, l = (max + min) / 2;
+        var data = new Uint8ClampedArray(unfilteredImageDataBuffer);
+	    var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
 
-	    if(max === min){
-	        h = s = 0; // achromatic
-	    } else {
-	        var d = max - min;
-	        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-	        switch(max){
-				case r:
-					h = (g - b) / d + (g < b ? 6 : 0);
-					break;
-				case g:
-					h = (b - r) / d + 2;
-					break;
-				case b:
-					h = (r - g) / d + 4;
-					break;
-	        }
-	        h /= 6;
+        console.log('setting factor:' + factor);
+
+        for(var i=0;i<data.length;i+=4) {
+			data[i] = factor * (data[i] - 128) + 128;
+			data[i+1] = factor * (data[i+1] - 128) + 128;
+			data[i+2] = factor * (data[i+2] - 128) + 128;
 	    }
-
-	    return [h, s, l];
-	}
-
-	/**
-	 * Converts an HSL color value to RGB. Conversion formula
-	 * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
-	 * Assumes h, s, and l are contained in the set [0, 1] and
-	 * returns r, g, and b in the set [0, 255].
-	 *
-	 * @param   Number  h       The hue
-	 * @param   Number  s       The saturation
-	 * @param   Number  l       The lightness
-	 * @return  Array           The RGB representation
-	 */
-	function hslToRgb(h, s, l){
-	    var r, g, b;
-
-	    if(s === 0){
-	        r = g = b = l; // achromatic
-	    }else{
-	        var hue2rgb = function(p, q, t){
-	            if(t < 0) { t += 1; }
-	            if(t > 1) { t -= 1; }
-	            if(t < 1/6) { return p + (q - p) * 6 * t; }
-	            if(t < 1/2) { return q; }
-	            if(t < 2/3) { return p + (q - p) * (2/3 - t) * 6; }
-	            return p;
-	        };
-
-	        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-	        var p = 2 * l - q;
-	        r = hue2rgb(p, q, h + 1/3);
-	        g = hue2rgb(p, q, h);
-	        b = hue2rgb(p, q, h - 1/3);
-	    }
-
-	    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-	}
-
-	/**
-	* Equalizes the histogram of an unsigned 1-channel image with values
-	* in range [0, rangeMax-1]. Corresponds to the equalizeHist OpenCV function.
-	*
-	* @param {Array} src 1-channel source image
-	* @param {Array} [dst] 1-channel destination image. If omitted, the
-	* result is written to src (faster)
-	* @return {Array} Destination image
-	*/
-	function equalizeHistogram(rangeMax, src, dst) {
-	    var srcLength = src.length;
-	    if (!dst) { dst = src; }
-
-	    // Compute histogram and histogram sum:
-	    var hist = new Float32Array(rangeMax);
-	    var sum = 0;
-		/*jshint bitwise: false*/
-	    for (var i = 0; i < srcLength; ++i) {
-	        ++hist[~~src[i]];
-	        ++sum;
-	    }
-
-	    // Compute integral histogram:
-	    var prev = hist[0];
-	    var mmin = 0, mmax = 0;
-	    for (i = 1; i < rangeMax; ++i) {
-	        prev = hist[i] += prev;
-	        if (prev/sum < 0.01) { mmin = i; }
-	        if (prev/sum < 0.99) { mmax = i; }
-	    }
-
-	    // Equalize image:
-	    //var norm = (rangeMax - 1) / sum;
-	    for (i = 0; i < srcLength; ++i) {
-	        // dst[i] = hist[~~src[i]] * norm;
-	        dst[i] = (src[i] - mmin) * (rangeMax - 1) / (mmax - mmin);
-	    }
-
-	    /*jshint bitwise: true*/
-		return dst;
-	}
-
-	function autoContrast() {
-		var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
-		var data = imageData.data;
-		var luminance = new Float32Array(data.length/4);
-
-		for (var d=0;d<data.length;d+=4) {
-			luminance[d/4] = rgbToHsl(data[d], data[d+1], data[d+2])[2] * 256;
-		}
-
-		luminance = equalizeHistogram(256, luminance);
-
-		for (d=0;d<data.length;d+=4) {
-			var hsl = rgbToHsl(data[d], data[d+1], data[d+2]);
-			var rgb = hslToRgb(hsl[0], hsl[1], luminance[d/4]/256);
-			data[d] = rgb[0];
-			data[d+1] = rgb[1];
-			data[d+2] = rgb[2];
-		}
-
+        var imageData = context.getImageData(0,0, resultWidth, resultHeight);
+        imageData.data.set(data);
 		context.putImageData(imageData, 0, 0);
-	}
-
-	// function autoContrast() {
-	// 	var min = 255, max = 0, d, i, grayValue, stretch;
-		
-	// 	var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
-		
-	// 	// find extremes
-	// 	for (d=0;d<imageData.data.length;d+=4) {
-	// 		grayValue = 0.21*imageData.data[d] + 0.72*imageData.data[d+1] + 0.07*imageData.data[d+2];
-	// 		if (grayValue>0){
-	// 			min = Math.min(min, grayValue);
-	// 		}
-	// 		max = Math.max(max, grayValue);
-	// 	}
-	// 	stretch = 255.0/(max-min);
-
-	// 	// stretch contrast
-	// 	for (d=0;d<imageData.data.length;d+=4) {
-	// 		grayValue = 0.21*imageData.data[d] + 0.72*imageData.data[d+1] + 0.07*imageData.data[d+2];
-			
-	// 		for(i=0;i<3;i++){
-	// 			imageData.data[d+i] = Math.max(Math.min(255, (imageData.data[d+i] - min) * stretch), 0);
-	// 		}
-	// 	}
-
-	// 	context.putImageData(imageData, 0, 0);
-	// }
-
-	// function setContrast(contrast){
-
-	// 	var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
-	// 	var data = imageData.data;
-	//     var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-
-	//     for(var i=0;i<data.length;i+=4) {
-	// 		data[i] = factor * (data[i] - 128) + 128;
-	// 		data[i+1] = factor * (data[i+1] - 128) + 128;
-	// 		data[i+2] = factor * (data[i+2] - 128) + 128;
-	//     }
-	// 	context.putImageData(imageData, 0, 0);
-	
-	// }
+        $('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
+    }
 
 	function performNextBlend(){
 		var face = faces.pop();
@@ -290,9 +127,6 @@ var smoisheleBlender = (function(smoisheleDataView){
 			transformContext(context, face, faceBlend);
 			context.drawImage(img, 0, 0);
 			context.restore();
-
-			//autoContrast();
-
 
 			// put the image into a buffer
 			var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
@@ -334,8 +168,8 @@ var smoisheleBlender = (function(smoisheleDataView){
 	}
 
 	function finishBlend() {
-		// enhance the contrast in the final image
-		autoContrast();
+        // store the unfiltered data for post-processing
+		unfilteredImageDataBuffer = new Uint8ClampedArray(context.getImageData(0, 0, resultWidth, resultHeight).data);
 
 		$('#result').css('background-image', 'url(' + canvas.toDataURL() + ')');
 
@@ -360,7 +194,6 @@ var smoisheleBlender = (function(smoisheleDataView){
 		}
 		
 		init();
-
 		setTimeout(function(){
 			$('body').addClass('blending');
 			$('body').removeClass('analysing');
@@ -384,6 +217,11 @@ var smoisheleBlender = (function(smoisheleDataView){
 		document.body.classList.remove('cancelable');
 	}, false);
 
+    document.getElementById('contrast-slider').addEventListener('input', function(){
+        setContrast(parseFloat(document.getElementById('contrast-slider').value));
+        var exportedImage = canvas.toDataURL('image/png;base64;');
+        doneCallback(exportedImage);
+    });
 
 	return { blend: blend, init: function(){} };
 })(smoisheleDataView);
