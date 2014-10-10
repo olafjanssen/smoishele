@@ -28,7 +28,6 @@ var smoisheleBlender = (function(smoisheleDataView){
 	canvas.setAttribute('height', resultHeight);
 	context.fillStyle = 'rgba(0, 0, 0, 0)';
 
-
 	// computes the average proportions of the data to be blended
 	function init(){
 		var eye2eyeDistance = 0,
@@ -67,7 +66,69 @@ var smoisheleBlender = (function(smoisheleDataView){
 							y: faceBlend.leftEye.y + (normalizedEye2mouthDistance * Math.sin(eyeAngle))/resultHeight};
 	}
 
-	function transformContext(context, source, target) {
+    function convertRGBtoXYZ(rgb) {
+        var rgbNorm = [ rgb[0]/255, rgb[1]/255, rgb[2]/255 ];
+
+        for(var i=0;i<3;i++){
+            rgbNorm[i] = (rgbNorm[i] > 0.04045? Math.pow( (rgbNorm[i] + 0.055 ) / 1.055, 2.4) : rgbNorm[i] / 12.92) * 100;
+        }
+
+        return [
+                rgbNorm[0] * 0.4124 + rgbNorm[1] * 0.3576 + rgbNorm[2] * 0.1805,
+                rgbNorm[0] * 0.2126 + rgbNorm[1] * 0.7152 + rgbNorm[2] * 0.0722,
+                rgbNorm[0] * 0.0193 + rgbNorm[1] * 0.1192 + rgbNorm[2] * 0.9505,
+            ];
+    }
+
+    function convertXYZtoLAB(xyz) {
+        var xyzNorm = [xyz[0]/95.047, xyz[1]/100.000, xyz[2]/108.883];
+
+        for(var i=0;i<3;i++){
+            xyzNorm[i] = xyzNorm[i] > 0.008856? Math.pow(xyzNorm[i], 1/3) : ( 7.787 * xyzNorm[i] ) + ( 16 / 116 );
+        }
+
+        return [
+            116 * xyzNorm[1] - 16,
+            500 * (xyzNorm[0] - xyzNorm[1]),
+            200 * (xyzNorm[1] - xyzNorm[2])
+        ];
+    }
+
+    function convertLABtoXYZ(lab) {
+        var xyzNorm = [0,0,0];
+        xyzNorm[1] = (lab[0] + 16) / 116;
+        xyzNorm[0] = (lab[1] / 500 + xyzNorm[1]);
+        xyzNorm[2] = xyzNorm[1] - lab[2] / 200;
+
+        for(var i=0;i<3;i++){
+            xyzNorm[i] = Math.pow(xyzNorm[i], 3) > 0.008856? Math.pow(xyzNorm[i], 3) : ( xyzNorm[i] - 16 / 116 ) / 7.787;
+        }
+
+        return [
+            xyzNorm[0] * 95.047,
+            xyzNorm[1] * 100.000,
+            xyzNorm[2] * 108.883
+        ];
+    }
+
+    function convertXYZtoRGB(xyz){
+        var xyzNorm = [xyz[0]/100, xyz[1]/100, xyz[2]/100];
+
+        var rgb = [
+            xyzNorm[0] *  3.2406 + xyzNorm[1] * -1.5372 + xyzNorm[2] * -0.4986,
+            xyzNorm[0] * -0.9689 + xyzNorm[1] *  1.8758 + xyzNorm[2] *  0.0415,
+            xyzNorm[0] *  0.0557 + xyzNorm[1] * -0.2040 + xyzNorm[2] *  1.0570
+        ];
+
+        for(var i=0;i<3;i++){
+            rgb[i] = (rgb[i] > 0.0031308? 1.055 * ( Math.pow(rgb[i],  1 / 2.4) ) - 0.055 : 12.92 * rgb[i]) * 255;
+        }
+
+        return rgb;
+    }
+
+
+    function transformContext(context, source, target) {
 		var affinematrix = [];
 
         var a = source.leftEye.x * source.image.width,
@@ -95,12 +156,8 @@ var smoisheleBlender = (function(smoisheleDataView){
 	}
 
 	function setContrast(contrast){
-        console.log('setting contrast:' + contrast);
-
         var data = new Uint8ClampedArray(unfilteredImageDataBuffer);
 	    var factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-
-        console.log('setting factor:' + factor);
 
         for(var i=0;i<data.length;i+=4) {
 			data[i] = factor * (data[i] - 128) + 128;
@@ -130,10 +187,23 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 			// put the image into a buffer
 			var imageData = context.getImageData(0, 0, resultWidth, resultHeight);
+            var rgb = [0,0,0,0], lab, e;
 			for (var d=0;d<grandBuffer.length;d++) {
-				if (d%4<3){
-					grandBuffer[d] += face.quality * imageData.data[d];
-				}
+                rgb[d%4] = imageData.data[d];
+                if (d%4 === 3) {
+                    lab = convertXYZtoLAB(convertRGBtoXYZ(rgb));
+                    //for(e=0;e<3;e++) {
+                    //    grandBuffer[d - 3 + e] += face.quality * lab[e];
+                    //}
+                    grandBuffer[d - 3 + 0] += face.quality * Math.log(lab[0] + 1);
+                    grandBuffer[d - 3 + 1] += face.quality * Math.log(lab[1] + 129);
+                    grandBuffer[d - 3 + 2] += face.quality * Math.log(lab[2] + 129);
+                }
+//				if (d%4<3){
+//					grandBuffer[d] += face.quality * imageData.data[d];
+//                    grandBuffer[d] += 1 / (imageData.data[d] + 1);
+//                    grandBuffer[d] *= Math.pow(imageData.data[d] + 1, face.quality);
+//				}
 			}
 			
 			// update the intermediate result
@@ -142,9 +212,24 @@ var smoisheleBlender = (function(smoisheleDataView){
 			context.clearRect(0, 0, canvas.width, canvas.height);
 
 			for (d=0;d<grandBuffer.length;d++) {
-				if (d%4<3){
-					imageData.data[d] = grandBuffer[d] / totalQuality;
-				}
+                lab[d%4] = grandBuffer[d] / totalQuality;
+
+                if (d%4 === 3) {
+                    lab = [
+                        Math.exp(lab[0]) - 1,
+                        Math.exp(lab[1]) - 129,
+                        Math.exp(lab[2]) - 129
+                    ];
+                    rgb = convertXYZtoRGB(convertLABtoXYZ(lab));
+                    for(e=0;e<3;e++) {
+                        imageData.data[d - 3 + e] = rgb[e];
+                    }
+                }
+//                if (d%4<3){
+//					imageData.data[d] = grandBuffer[d] / totalQuality;
+//                    imageData.data[d] = (count / grandBuffer[d]) - 1;
+//                    imageData.data[d] = Math.pow(grandBuffer[d], 1.0 / totalQuality) - 1;
+//				}
 			}
 
 			context.putImageData(imageData, 0, 0);
@@ -188,9 +273,10 @@ var smoisheleBlender = (function(smoisheleDataView){
 		count = 0;
 		doneCallback = callback;
 		
-		grandBuffer = new Uint32Array(4 * resultWidth * resultHeight);
+		grandBuffer = new Float64Array(4 * resultWidth * resultHeight);
 		for (var d=0;d<grandBuffer.length;d++) {
 			grandBuffer[d] = d%4===3?255:0;
+//            grandBuffer[d] = d%4===3?255:1;
 		}
 		
 		init();
