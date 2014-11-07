@@ -17,11 +17,11 @@
 }
 
 #analysis-result {
+    background-position: center center;
+    background-size: cover;
     position: absolute;
     height: 100%;
     width: 100%;
-    background-size: cover;  
-    background-position: center center;  
 }
 
 #input-box {
@@ -155,7 +155,7 @@
     margin-left: -5.75em;
     margin-top: -0.75em;
     position: absolute;
-    height: 11.5em;    
+    height: 11.5em;
     width: 11.5em;
     display: none;
     left: 50%;
@@ -367,7 +367,7 @@ main {
 }
 
 #introduction .intro2 {
-  transition: opacity 1s ease 1s;
+  transition: opacity 1s ease 2s;
   opacity: 0;
 }
 
@@ -376,7 +376,7 @@ main {
 }
 
 #introduction .intro3 {
-  transition: opacity 1s ease 2s;
+  transition: opacity 1s ease 3s;
   opacity: 0;
 }
 
@@ -414,4 +414,118 @@ body {
   border: 0;
   right: 0;
   top: 0;
+}
+
+#demo ul li {
+    border: 0.5em solid #f89406;
+    transition: opacity 1s ease, left 1s ease;
+    background-size: cover;
+    margin-left: -3.5em;
+    border-radius: 1em;
+    position: absolute;
+    margin-top: -4em;
+    height: 8em;
+    width: 6em;
+    opacity: 0;
+    top: 25%;
+
+    &:nth-child(1) {
+        background-image: url('../images/demo/rembrandt1.jpg');
+        left: 12.5%;
+    }
+    &:nth-child(2) {
+        background-image: url('../images/demo/rembrandt2.jpg');
+        left: 27.5%;
+    }
+    &:nth-child(3) {
+        background-image: url('../images/demo/rembrandt3.jpg');
+        left: 42.5%
+    }
+    &:nth-child(4) {
+        background-image: url('../images/demo/rembrandt4.jpg');
+        left: 57.5%;
+    }
+    &:nth-child(5) {
+        background-image: url('../images/demo/rembrandt5.jpg');
+        left: 72.5%;
+    }
+    &:nth-child(6) {
+        background-image: url('../images/demo/rembrandt6.jpg');
+        left: 87.5%;
+    }
+    &:nth-child(7) {
+        background-image: url('../images/demo/rembrandt.png');
+        border-radius: 1em;
+        margin-left: -4.5em;
+        margin-top: -6em;
+        height: 12em;
+        width: 9em;
+        opacity: 0;
+        left: 50%;
+    }
+}
+
+.demo1 #demo ul li {
+    opacity: 1;
+
+    &:nth-child(7) {
+        opacity: 0;
+    }
+}
+
+.demo2 #demo ul li {
+    border-radius: 6em;
+    margin-left: -3em;
+    margin-top: -3em;
+    height: 6em;
+    opacity: 1;
+    width: 6em;
+
+    &:nth-child(1) {
+        background-position: center;
+        background-size: 125%;
+    }
+    &:nth-child(2) {
+        background-position: 50% 14%;
+        background-size: 200%;
+    }
+    &:nth-child(3) {
+        background-position: 30% 22%;
+        background-size: 200%;
+    }
+    &:nth-child(4) {
+        background-position: 25% 15%;
+        background-size: 125%;
+    }
+    &:nth-child(5) {
+        background-position: 50% 25%;
+        background-size: 170%;
+    }
+    &:nth-child(6) {
+        background-position: 40% 40%;
+        background-size: 225%;
+    }
+
+    &:nth-child(7) {
+        opacity: 0;
+    }
+}
+
+.demo3 #demo ul li {
+    border-radius: 6em;
+    margin-left: -3em;
+    margin-top: -3em;
+    height: 6em;
+    width: 6em;
+    opacity: 0;
+    left: 50%;
+
+    &:nth-child(7) {
+        border-radius: 1em;
+        margin-left: -4.5em;
+        margin-top: -6em;
+        height: 12em;
+        width: 9em;
+        opacity: 1;
+    }
 }
