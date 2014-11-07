@@ -1,9 +1,9 @@
 /* global smoisheleDataView */
 
-/** 
+/**
  *	This object can analyse an array of images given by an array of urls.
  *	It will first detect faces using ccv, then proceeds to fit facial features using clmtrackr.
- *	
+ *
  */
 var smoisheleBlender = (function(smoisheleDataView){
 	'use strict';
@@ -38,7 +38,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 			var scaledImageHeight = face.image.height/face.image.width * resultWidth;
 			var eye2eye = Math.sqrt( Math.pow( (face.rightEye.x-face.leftEye.x)*resultWidth, 2) + Math.pow( (face.rightEye.y-face.leftEye.y)*scaledImageHeight, 2) );
 			var eye2mouth = Math.sqrt( Math.pow( (face.mouth.x-face.leftEye.x)*resultWidth, 2) + Math.pow( (face.mouth.y-face.leftEye.y)*scaledImageHeight, 2) );
-			
+
 			eye2eyeDistance += eye2eye;
 			eye2mouthDistance += eye2mouth;
 			eyeAngle += Math.acos( ((face.rightEye.x-face.leftEye.x)*(face.mouth.x-face.leftEye.x) * resultWidth * resultWidth + (face.rightEye.y-face.leftEye.y)*(face.mouth.y-face.leftEye.y) * scaledImageHeight * scaledImageHeight) / eye2eye / eye2mouth );
@@ -61,7 +61,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 		faceBlend = {image: {width: resultWidth, height: resultHeight},
 					leftEye: {x: 0.5*(resultWidth - normalizedEye2eyeDistance)/resultWidth, y: 0.45},
 					rightEye: {x: 0.5*(resultWidth + normalizedEye2eyeDistance)/resultWidth, y: 0.45}};
-		
+
 		faceBlend.mouth = {x: faceBlend.leftEye.x + (normalizedEye2mouthDistance * Math.cos(eyeAngle))/resultWidth,
 							y: faceBlend.leftEye.y + (normalizedEye2mouthDistance * Math.sin(eyeAngle))/resultHeight};
 	}
@@ -81,7 +81,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 			q = source.mouth.y * source.image.height,
 			sx = -target.mouth.x * target.image.width,
 			sy = -target.mouth.y * target.image.height;
-    
+
         var D = (a*m+b*p+l*q) - (a*q+b*l+m*p);
         affinematrix[0] = ((b*kx + m*sx + dx*q) - (b*sx +q*kx + dx*m))/D;
         affinematrix[1] = ((b*ky + m*sy + dy*q) - (b*sy +q*ky + dy*m))/D;
@@ -110,7 +110,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 
 	function performNextBlend(){
 		var face = faces.pop();
-		
+
 		if (face === undefined){
 			finishBlend();
 		}
@@ -130,7 +130,7 @@ var smoisheleBlender = (function(smoisheleDataView){
                     grandBuffer[d] += face.quality * Math.log(imageData.data[d] + 1);
 				}
 			}
-			
+
 			// update the intermediate result
 			count += 1;
 			totalQuality += face.quality;
@@ -156,7 +156,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 				finishBlend();
 			}
 		};
-		
+
 		// Since we assume the url to be a data url, we do not need set cross-origin
 		img.src = face.image.url;
 
@@ -172,7 +172,7 @@ var smoisheleBlender = (function(smoisheleDataView){
 		$('body').removeClass('blending');
 		$('body').addClass('finished-blending');
 		$('body').addClass('contains-result');
-		
+
 		doneCallback(exportedImage);
 	}
 
@@ -182,12 +182,12 @@ var smoisheleBlender = (function(smoisheleDataView){
 		totalQuality = 0;
 		count = 0;
 		doneCallback = callback;
-		
+
 		grandBuffer = new Float32Array(4 * resultWidth * resultHeight);
 		for (var d=0;d<grandBuffer.length;d++) {
 			grandBuffer[d] = d%4===3?255:0;
 		}
-		
+
 		init();
 		setTimeout(function(){
 			$('body').addClass('blending');

@@ -22,7 +22,7 @@ var smoisheleDetect = (function(ccv, cascade){
 
 		// load the image given by the url in a canvas
 		var img = new Image();
-		
+
 		// return without a face if the image is corrupt
 		img.onerror = function() {
 			callback(null);
@@ -36,7 +36,9 @@ var smoisheleDetect = (function(ccv, cascade){
 
 			canvas.setAttribute('width', W);
 			canvas.setAttribute('height', H);
-			context.drawImage(img,0,0,W,H);
+            context.fillStyle = 'rgba(255, 255, 255, 255)';
+            context.fillRect(0, 0, W, H);
+            context.drawImage(img,0,0,W,H);
 
 			$('#graph').css('background-image', 'url(' + canvas.toDataURL() + ')');
 
@@ -44,10 +46,10 @@ var smoisheleDetect = (function(ccv, cascade){
 			/*jshint camelcase: false */
 
 			function post(facesInPhoto){
-				
+
 				var callbackCalled = false;
 				facesInPhoto.forEach(function(faceInPhoto) {
-					
+
 					if (assumedLocation){
 						if (faceInPhoto.x > assumedLocation.x * W || faceInPhoto.y > assumedLocation.y * H ||
 							faceInPhoto.x + faceInPhoto.width < assumedLocation.x * W ||
@@ -58,7 +60,7 @@ var smoisheleDetect = (function(ccv, cascade){
 
 					var faceCanvas = document.createElement('canvas'),
 						faceContext = faceCanvas.getContext('2d');
-					
+
 					var mult = 3;
 
 					var box = {
@@ -81,7 +83,7 @@ var smoisheleDetect = (function(ccv, cascade){
 					callback(face);
 					callbackCalled = true;
 				});
-				
+
 				// if no faces sent to callback, send a null
 				if (!callbackCalled){
 					callback(null);
