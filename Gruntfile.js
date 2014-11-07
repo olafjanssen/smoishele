@@ -320,6 +320,7 @@ module.exports = function (grunt) {
                         'sitemap.xml',
                         'images/{,*/}*.webp',
                         'images/favicons/*.*',
+                        'images/demo/*.*',
                         '{,*/}*.html',
                         'styles/fonts/{,*/}*.*'
                     ]
