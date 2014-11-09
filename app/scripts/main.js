@@ -41,4 +41,27 @@ $(function(){
     $('h1').click(function(){
         document.body.classList.toggle('show-info');
     });
+
+    // load Tumblr gallery
+
+    $.ajax({
+        url: 'http://smoishele.tumblr.com/api/read/json?num=50&type=photo',
+        type: 'GET',
+        dataType: 'jsonp',
+        cache: false,
+        crossDomain: true,
+        processData: true,
+        success: function(result)
+        {
+            var output = '';
+            for (var i=0; i<result.posts.length; i++){
+                output += '<article><a target="_blank" href="' + result.posts[i].url + '"><div class="item" style="background-image: url(' +
+                result.posts[i]['photo-url-400'] + ');"></div></a>' + result.posts[i]['photo-caption'] + '</article>';
+            }
+            document.getElementById('gallery').innerHTML = output;
+        },
+        error: function(){
+        }
+    });
+
 });

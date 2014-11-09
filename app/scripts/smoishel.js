@@ -24,9 +24,13 @@ function getHashCode(data) {
 function analyse(url, callback, options){
 	'use strict';
 
+    if (!url) {
+        return;
+    }
+
 	var hash = getHashCode(url),
 		cachedFaces = smoisheleFaceCache.getFaces(hash);
-	
+
 	if (cachedFaces === undefined) {
 		var expectedFaces = 0, analysedFaces = 0;
 
@@ -38,7 +42,7 @@ function analyse(url, callback, options){
 				}
 
 				expectedFaces += 1;
-				
+
 				smoisheleAnalyser.getFaceFeatures(face, function(newFace){
 					analysedFaces += 1;
 					if (newFace){
@@ -46,7 +50,7 @@ function analyse(url, callback, options){
 						smoisheleDataView.addFace(newFace);
 						smoisheleFaceCache.addFace(newFace);
 					}
-				
+
 					if (analysedFaces === expectedFaces){
 						callback();
 					}
@@ -60,4 +64,4 @@ function analyse(url, callback, options){
 	}
 }
 
-console.log(analyse);
+analyse();

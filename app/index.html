@@ -46,45 +46,6 @@
 
     </head>
     <body class="during-intro">
-        <div id="graph"></div>
-        <div id="input-box"></div>
-
-        <section id="demo">
-            <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
-        </section>
-
-        <section id="introduction">
-            <h2><span class="intro1">Smoishele finds faces</span><br><span class="intro2"> and blends them</span><br><span class="intro3"> into one</span></h2>
-        </section>
-
-        <main>
-            <div class='input-option upload'>
-                <div class='upload-button'></div>
-                <input type="file" id="file-upload-button" name="files[]" multiple="multiple"/>
-            </div>
-            <div class='input-option facebook'>
-                <button id="facebook-connect-button"></button>
-            </div>
-            <svg class="progress-circle">
-                <svg viewBox="0 0 70 70" height="100%" width="100%">
-                    <path d="m35,2.5c17.955803,0 32.5,14.544199 32.5,32.5c0,17.955803 -14.544197,32.5 -32.5,32.5c-17.955803,0 -32.5,-14.544197 -32.5,-32.5c0,-17.955801 14.544197,-32.5 32.5,-32.5z"></path>
-                </svg>
-            </svg>
-            <div id="smoishel-button" class='input-option smoishele-logo'>
-                <div id="result"></div>
-            </div>
-             <input id="contrast-slider" type="range" min="-50" max="100" step="1" value="0"/>
-            <button id="facebook-share" class="share-button facebook"></button>
-            <a href="" id="image-download" class="share-button" download></a>
-        </main>
 
         <aside id="advanced">
             <a download="db.json" id="dbase-download">download DB</a>
@@ -93,29 +54,74 @@
 
         <header>
             <h1>Smoishele</h1>
+
+            <section class="information">
+                <div class="column">
+                    <p>A theory states that our brain averages all the faces we see, and then compares a new face to the average it has created. The more it resembles the average, the more beautiful it is.</p>
+                </div>
+                <div class="column">
+                    <p>Select multiple images from your hard drive to smoishel into an averaged face, or connect with Facebook and smoishel all the photo's you are tagged in.</p>
+                </div>
+            </section>
         </header>
 
-        <section id="information">
-            <h3>Smoishele</h3>
-            <p>Select multiple images from your hard <br> drive to smoishel into an averaged face, or<br> connect with Facebook and smoishel all the <br>photo's you are tagged in.</p>
+        <main>
+            <div id="graph"></div>
+            <div id="input-box"></div>
 
-            <h3>Credits:</h3>
-            <p>
-                Smoishele uses the <a href="https://www.github.com/auduno/clmtrackr">clmtrackr</a> library for feature detection. Face bounding box detection is done using a JavaScript implementation of the <a href="https://github.com/liuliu/ccv">ccv</a> library. The webapp itself is maintained by <a href="https://github.com/olafjanssen">Olaf Janssen</a>. Check out the <a href="http://smoishele.tumblr.com" target="_blank">gallery</a>.
-            </p>
+            <section id="demo">
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </section>
 
-            <h3>Disclaimer:</h3>
-            <p>
-                The algorithm is slightly biased. It works best with fair-skinned men without glasses. Nothing is uploaded to the server and no personal information is collected.
-            </p>
-            <a href="https://github.com/olafjanssen/smoishele"><img id="github-fork" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+            <section id="introduction">
+                <h2><span class="intro1">Smoishele finds faces</span><br><span class="intro2"> and blends them</span><br><span class="intro3"> into one</span></h2>
+            </section>
 
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                <input type="hidden" name="cmd" value="_s-xclick">
-                <input type="hidden" name="hosted_button_id" value="YC8R78CZR7BN8">
-                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                <img alt="Donate on PayPal" src="https://www.paypalobjects.com/nl_NL/i/scr/pixel.gif" width="1" height="1">
-            </form>
+            <div id="menu">
+                <div class='input-option upload'>
+                    <div class='upload-button'></div>
+                    <input type="file" id="file-upload-button" name="files[]" multiple="multiple"/>
+                </div>
+                <div class='input-option facebook'>
+                    <button id="facebook-connect-button"></button>
+                </div>
+                <svg class="progress-circle">
+                    <svg viewBox="0 0 70 70" height="100%" width="100%">
+                        <path d="m35,2.5c17.955803,0 32.5,14.544199 32.5,32.5c0,17.955803 -14.544197,32.5 -32.5,32.5c-17.955803,0 -32.5,-14.544197 -32.5,-32.5c0,-17.955801 14.544197,-32.5 32.5,-32.5z"></path>
+                    </svg>
+                </svg>
+                <div id="smoishel-button" class='input-option smoishele-logo'>
+                    <div id="result"></div>
+                </div>
+                <input id="contrast-slider" type="range" min="-50" max="100" step="1" value="0"/>
+                <button id="facebook-share" class="share-button facebook"></button>
+                <a href="" id="image-download" class="share-button" download></a>
+            </div>
+        </main>
+
+        <footer>
+            <section class="information">
+                <div class="column">
+                    <h3>Credits:</h3>
+                    <p>Smoishele uses the <a href="https://www.github.com/auduno/clmtrackr">clmtrackr</a> library for feature detection. Face bounding box detection is done using a JavaScript implementation of the <a href="https://github.com/liuliu/ccv">ccv</a> library. The webapp itself is maintained by <a href="https://github.com/olafjanssen">Olaf Janssen</a>. Check out the <a href="http://smoishele.tumblr.com" target="_blank">gallery</a>.</p>
+                </div>
+                <div class="column">
+                    <h3>Disclaimer:</h3>
+                    <p>The algorithm is slightly biased. It works best with fair-skinned male humans without glasses and a dislike for facial hair. In the whole smoishel process, nothing is uploaded to the server and no personal information is collected.</p>
+                </div>
+            </section>
+        </footer>
+
+        <section id="gallery">
+
         </section>
 
         <!-- build:js scripts/vendor.js -->
