@@ -1,4 +1,4 @@
 smoishele
 =========
 
-Smoishele - A face blending web server
+Smoishele - A face blending web app

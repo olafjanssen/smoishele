@@ -39,6 +39,7 @@
 
 .input-thumb {
     -webkit-transition: all 3s ease;
+    transition: all 3s ease;
     background-position: center center;
     border: 0.5em solid #f89406;
     background-size: cover;
@@ -54,6 +55,7 @@
 
 .blending .input-thumb {
     -webkit-transition: all 0.5s ease-in;
+    transition: all 0.5s ease-in;
     left: 50% !important;
     top: 50% !important;
 }
@@ -85,6 +87,7 @@
 
 .share-button {
     -webkit-transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
     background-repeat: no-repeat;
     background-position: center;
     background-color: #666;
@@ -105,6 +108,7 @@
 .finished-blending.contains-result #contrast-slider,
 .finished-blending.contains-result .share-button {
     -webkit-transition: opacity 0.5s 1s ease;
+    transition: opacity 0.5s 1s ease;
     opacity: 1;
 }
 
@@ -163,6 +167,7 @@
 
 .analysing .progress-circle path {
     -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .progress-circle path {
@@ -174,6 +179,7 @@
 
 .input-option {
     -webkit-transition: all 1s ease;
+    transition: all 1s ease;
     background-color: lightblue;
     vertical-align: middle;
     display: inline-block;
@@ -270,6 +276,7 @@ footer {
 
 .input-option.upload {
     -webkit-transform: translate(-4em, 4em);
+    transform: translate(-4em, 4em);
     background-color: #3498db;
     margin-right: -1em;
     margin-top: 5em;
@@ -277,12 +284,14 @@ footer {
 
 .input-option.facebook {
     -webkit-transform: translate(4em, 4em);
+    transform: translate(4em, 4em);
     background-color: #2ecc71;
     margin-top: 5em;
 }
 
 .input-option.smoishele-logo {
     -webkit-transform: translate(0, -4em);
+    transform: translate(0, -4em);
     background-color: #fff;
     position: absolute;
     overflow: hidden;
@@ -319,11 +328,14 @@ footer {
 .analysing .input-option,
 .finished-blending .input-option {
     -webkit-transform: none;
+    transform: none;
 }
 
 .during-intro .input-option {
   -webkit-transform: rotate(-1800deg);
   -webkit-transition: none;
+  transform: rotate(-1800deg);
+  transition: none;
   opacity: 0;
 }
 
@@ -355,6 +367,7 @@ main {
 
 #graph {
     -webkit-transition: opacity 2s 1s ease;
+    transition: opacity 2s 1s ease;
     background-position: center;
     background-size: cover;
     position: absolute;
@@ -461,6 +474,7 @@ body {
 
 #contrast-slider {
     -webkit-transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
     position: absolute;
     margin-top: 18.25em;
     margin-left: -13em;
